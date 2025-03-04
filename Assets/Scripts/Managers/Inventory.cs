@@ -6,22 +6,21 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 {
     public static Inventory instance;
 
-    //inventory stores equipments
+    //库存列表
     public List<InventorySlot> inventorySlotList;
     public Dictionary<ItemData, InventorySlot> inventorySlotDictionary;
 
-    //stash stores materials
     public List<InventorySlot> stashSlotList;
     public Dictionary<ItemData, InventorySlot> stashSlotDictionary;
 
-    //equipped equipments
+    //装备
     public List<InventorySlot> equippedEquipmentSlotList;
     public Dictionary<ItemData_Equipment, InventorySlot> equippedEquipmentSlotDictionary;
 
 
     public List<ItemData> startItems;
 
-    [Header("Inventory UI")]
+    [Header("背包UI")]
     [SerializeField] private Transform referenceInventory;
     [SerializeField] private Transform referenceStash;
     [SerializeField] private Transform referenceEquippedEquipments;
@@ -36,7 +35,7 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
     //private bool flaskUsed = false;
 
 
-    [Header("Item Data Base")]
+    [Header("游戏存档 数据集合")]
     public List<ItemData> itemDataBase;
     public List<InventorySlot> loadedInventorySlots;
     public List<ItemData_Equipment> loadedEquippedEquipment;
@@ -113,8 +112,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
     private void UpdateAllSlotUI()
     {
-        //Clean up all the slot UIs before update
-        //to ensure no extra slot UI exists after update
         for (int i = 0; i < inventorySlotUI.Length; i++)
         {
             inventorySlotUI[i].CleanUpInventorySlotUI();
@@ -141,13 +138,11 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
             stashSlotUI[i].UpdateInventorySlotUI(stashSlotList[i]);
         }
 
-        //update equipped equipments UI when equipping equipments
         for (int i = 0; i < equippedEquipmentSlotUI.Length; i++)
         {
-            //if in the equipped equipment list there's an equipment
-            //whose type is same as this UI slot equipment type
-            //(e.g. the equipped equipment is a weapon, and this is a weapon slot UI)
-            //update this UI slot according to that equipment
+            //  equippedEquipmentSlotDictionary 是一个字典，存储每个装备的物品数据和对应槽的信息
+            // 每个装备槽有一个 equipmentType，例如武器、盔甲等。
+            // 如果字典中的物品类型与当前 UI 槽匹配，就用该物品数据更新 UI。
             foreach (var search in equippedEquipmentSlotDictionary)
             {
                 if (search.Key.equipmentType == equippedEquipmentSlotUI[i].equipmentType)
@@ -158,7 +153,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
         }
 
-        //update Stat Value in stat panel (character UI)
         UpdateStatUI();
 
     }
@@ -173,16 +167,12 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
     public void EquipItem(ItemData _item)
     {
-        //convert ItemData type to ItemData_Equipment type (father class -> child class)
         ItemData_Equipment _newEquipmentToEquip = _item as ItemData_Equipment;
 
         InventorySlot newEquipmentSlot = new InventorySlot(_newEquipmentToEquip);
 
-        //if this type of equipment is already equipped,
-        //remove the equipped one to equip the new one
         ItemData_Equipment _oldEquippedEquipment = null;
 
-        //var search here is same as KeyValuePair<ItemData_Equipment, InventorySlot>
         foreach (var search in equippedEquipmentSlotDictionary)
         {
             if (search.Key.equipmentType == _newEquipmentToEquip.equipmentType)
@@ -195,7 +185,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
         {
             UnequipEquipmentWithoutAddingBackToInventory(_oldEquippedEquipment);
 
-            //the unequipped old equipment will get back to inventory
             AddItem(_oldEquippedEquipment);
         }
 
@@ -203,7 +192,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
         equippedEquipmentSlotDictionary.Add(_newEquipmentToEquip, newEquipmentSlot);
         _newEquipmentToEquip.AddModifiers();
 
-        //equipped equipment will be removed from inventory
         RemoveItem(_newEquipmentToEquip);
         //UpdateInventoryAndStashUI();
 
@@ -213,7 +201,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
         }
     }
 
-    //Unequip here will not add the equipment back to inventory
     public void UnequipEquipmentWithoutAddingBackToInventory(ItemData_Equipment _equipmentToRemove)
     {
         if (equippedEquipmentSlotDictionary.TryGetValue(_equipmentToRemove, out InventorySlot value))
@@ -233,7 +220,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
     {
         if (inventorySlotList.Count >= inventorySlotUI.Length)
         {
-            Debug.Log("No more space in inventory");
             return false;
         }
 
@@ -270,15 +256,14 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
     private void AddEquipmentToInventory(ItemData _item)
     {
-        //if this item is already in inventory, its stack size++
         if (inventorySlotDictionary.TryGetValue(_item, out InventorySlot value))
         {
             value.AddStack();
         }
-        else  //if this item is not in inventory, add it to the inventoryItem list
+        else  
         {
-            InventorySlot newItem = new InventorySlot(_item);  //initialize the inventroyItem using contructor and make its stackSize++ (=1)
-            inventorySlotList.Add(newItem);  //add this inventoryItem to the inventory item list
+            InventorySlot newItem = new InventorySlot(_item);  
+            inventorySlotList.Add(newItem);  
             inventorySlotDictionary.Add(_item, newItem);
         }
     }
@@ -287,20 +272,17 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
     {
         if (inventorySlotDictionary.TryGetValue(_item, out InventorySlot value))
         {
-            //if there's only 1 or less amount of this item in inventory,
-            //remove it from the inventory item list
             if (value.stackSize <= 1)
             {
                 inventorySlotList.Remove(value);
                 inventorySlotDictionary.Remove(_item);
             }
-            else  //if there're multiple this items in inventory, the stack size--
+            else  
             {
                 value.RemoveStack();
             }
         }
 
-        //For removing materials from stash
         if (stashSlotDictionary.TryGetValue(_item, out InventorySlot stashValue))
         {
             if (stashValue.stackSize <= 1)
@@ -350,18 +332,15 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
         for (int i = 0; i < _requiredMaterials.Count; i++)
         {
-            //if successfully find materials needed to craft
             if (stashSlotDictionary.TryGetValue(_requiredMaterials[i].item, out InventorySlot stashValue))
             {
-                //if the amount of the material in stash is not enough
                 if (stashValue.stackSize < _requiredMaterials[i].stackSize)
                 {
-                    Debug.Log("Not enough materials");
+                    Debug.Log("没有足够的材料！");
                     return false;
                 }
-                else  //if the amount of the material is enough in stash
+                else  
                 {
-                    //add the required materials to the remove list
                     for (int k = 0; k < _requiredMaterials[i].stackSize; k++)
                     {
                         materialsToRemove.Add(stashValue);
@@ -369,9 +348,9 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
                 }
 
             }
-            else  //if can't find required materials in stash
+            else  
             {
-                Debug.Log("Not enough materials");
+                Debug.Log("没有足够的材料！");
                 return false;
             }
         }
@@ -487,7 +466,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
         //inventory<itemID, stackSize>
         foreach (var pair in _data.inventory)
         {
-            //ItemData item
             foreach (var item in itemDataBase)
             {
                 if (item != null && item.itemID == pair.Key)
@@ -514,7 +492,6 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
 
     public void SaveData(ref GameData _data)
     {
-        //prevent from having more and more items every time starting the game
         _data.inventory.Clear();
         _data.equippedEquipmentIDs.Clear();
 
@@ -534,7 +511,7 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
         }
     }
 
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
     [ContextMenu("Fill up item data base")]
     private void FillUpItemDataBase()
     {
@@ -545,25 +522,17 @@ public class Inventory : MonoBehaviour, IGameProgressionSaveManager
     {
         List<ItemData> itemDataBase = new List<ItemData>();
 
-        //find all the asset names in the specified path
-        //here, new string[] {...} is same as new[] {...}, 
-        //the latter is the Inplicit (unvisiable) type convert,
-        //will judge the array type according to its content
         string[] assetNames = AssetDatabase.FindAssets("", new string[] { "Assets/ItemData/Items" });
 
-        //SO means scriptable object
         foreach (string SOName in assetNames)
         {
-            //get path to the item
             var SOPath = AssetDatabase.GUIDToAssetPath(SOName);
-            //load the item in this path
             var itemData = AssetDatabase.LoadAssetAtPath<ItemData>(SOPath);
-            //add this item to itemDataBase
             itemDataBase.Add(itemData);
         }
 
         return itemDataBase;
     }
-#endif
+#endif*/
 
 }

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class DodgeSkill : Skill
 {
-    [Header("Dodge Unlock Info")]
+    [Header("…¡±‹")]
     [SerializeField] private SkillTreeSlot_UI dodgeUnlockButton;
     [SerializeField] private int evasionIncreasement;
     public bool dodgeUnlocked;
 
-    [Header("Mirade Dodge")]
+    [Header("ª√”∞…¡±‹")]
     [SerializeField] private SkillTreeSlot_UI mirageDodgeUnlockButton;
     public bool mirageDodgeUnlocked;
 

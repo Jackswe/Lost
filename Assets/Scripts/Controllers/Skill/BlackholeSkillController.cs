@@ -7,7 +7,7 @@ using UnityEngine;
 public class BlackholeSkillController : MonoBehaviour
 {
     [SerializeField] private GameObject hotkeyPrefab;
-    [SerializeField] private List<KeyCode> hotkeyList;  //hotkeyList has to be in prefab script in order to make it recreate itself everytime a blackhole is generated so that hotkeylist will not delete its member every time a hotkey is pressed
+    [SerializeField] private List<KeyCode> hotkeyList;  
 
     private float maxSize;
     private bool canGrow = true;
@@ -39,38 +39,29 @@ public class BlackholeSkillController : MonoBehaviour
 
         if (QTEInputTimer >= 0)
         {
-            //if having pressed all the QTE buttons before input window ends
+            
             if (enemyTargets.Count > 0 && enemyTargets.Count == createdHotkey.Count)
             {
-                //releaseing clone attack early, before QTE input window ends
+                
                 QTEInputTimer = Mathf.Infinity;
                 ReadyToReleaseBlackholeCloneAttack();
                 BlackholeCloneAttack();
             }
         }
-        else if (QTEInputTimer < 0)  //if having not pressed all the QTE buttons before input window ends
+        else if (QTEInputTimer < 0)  
         {
-            //release clone attack on the QTEed enemies
+            
             if (enemyTargets.Count > 0)
             {
                 ReadyToReleaseBlackholeCloneAttack();
                 BlackholeCloneAttack();
             }
-            else  //if no enemy is QTEd, end skill
+            else  
             {
                 EndCloneAttack();
             }
 
         }
-
-
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    ReadyToReleaseBlackholeCloneAttack();
-        //}
-
-        //will set canShrink = true
-        //BlackholeCloneAttack();
 
         if (canGrow && !canShrink)
         {
@@ -97,7 +88,6 @@ public class BlackholeSkillController : MonoBehaviour
 
             CreateHotkey(collision);
 
-            //add hotkey
         }
     }
 
@@ -118,8 +108,6 @@ public class BlackholeSkillController : MonoBehaviour
         cloneAttackCooldown = _cloneAttackCooldown;
         QTEInputTimer = _QTEInputWindow;
 
-        //player won't be transparent
-        //if Replace Clone By Crystal is enabled in Clone Skill
         if (SkillManager.instance.clone.crystalMirageUnlocked)
         {
             playerIsTransparent = true;
@@ -130,15 +118,13 @@ public class BlackholeSkillController : MonoBehaviour
     {
         DestroyHotkeys();
         canCloneAttack = true;
-        canCreateHotkey = false;  //can't add enemy to QTE list after releasing clone attack
+        canCreateHotkey = false;  
 
-        //make player transparent when releasing clone attack
         if (!playerIsTransparent)
         {
             PlayerManager.instance.player.fx.MakeEntityTransparent(true);
             playerIsTransparent = true;
         }
-        //player will become visible again when exiting blackhole skill state
     }
 
     private void BlackholeCloneAttack()
@@ -150,7 +136,6 @@ public class BlackholeSkillController : MonoBehaviour
             int randomIndex = Random.Range(0, enemyTargets.Count);
 
             Vector3 offset;
-            //make clone spawn next to the enemy with a bit offset
             if (Random.Range(0, 100) > 50)
             {
                 offset = new Vector3(1, 0);
@@ -160,13 +145,10 @@ public class BlackholeSkillController : MonoBehaviour
                 offset = new Vector3(-1, 0);
             }
 
-            //if Replace Clone By Crystal is enabled in Clone Skill
-            //Create Crystal instead of Clone
             if (SkillManager.instance.clone.crystalMirageUnlocked)
             {
                 SkillManager.instance.crystal.CreateCrystal();
 
-                //ranomly select enemy inside the blackhole range
                 SkillManager.instance.crystal.CurrentCrystalSpecifyEnemy(enemyTargets[randomIndex]);
             }
             else
@@ -199,8 +181,6 @@ public class BlackholeSkillController : MonoBehaviour
             return;
         }
 
-        //can't add extra enemies to the QTE list
-        //after releasing clone attack
         if (!canCreateHotkey)
         {
             return;

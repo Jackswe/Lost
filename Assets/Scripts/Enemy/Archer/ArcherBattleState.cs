@@ -15,15 +15,10 @@ public class ArcherBattleState : ArcherState
     {
         base.Enter();
 
-        //entering battleState will set the default enemy aggressiveTime
-        //To prevent the case where if player approaching enemy from behind
-        //enemy will get stuck in switching between idleState and battleState
         stateTimer = enemy.aggressiveTime;
 
         player = PlayerManager.instance.player.transform;
 
-        //if player is attacking enemy from behind,
-        //enemy will turn to player's side immediately
         FacePlayer();
 
         if (player.GetComponent<PlayerStats>().isDead)
@@ -53,17 +48,13 @@ public class ArcherBattleState : ArcherState
 
         //AudioManager.instance.PlaySFX(14, enemy.transform);
 
-        //enemy always faces player in battle state
-        //to prevent enemy from getting stuck in edge of ground
         FacePlayer();
 
         if (enemy.IsPlayerDetected())
         {
-            //If enemy can see player, then it's always in aggreesive mode
             stateTimer = enemy.aggressiveTime;
             //Debug.Log("I see player");
 
-            //if player is too close to archer, archer will jump if available
             if (Vector2.Distance(player.transform.position, enemy.transform.position) < enemy.jumpJudgeDistance)
             {
                 if (CanJump())
@@ -75,7 +66,6 @@ public class ArcherBattleState : ArcherState
                 }
             }
 
-            //if player is inside archer's attack range, archer will attack player
             if (enemy.IsPlayerDetected() && Vector2.Distance(player.transform.position, enemy.transform.position) < enemy.attackDistance)
             {
 
@@ -88,9 +78,9 @@ public class ArcherBattleState : ArcherState
                 }
             }
         }
-        else  //If enemy can't see player, 
+        else  // 看不到玩家的时候
         {
-            //If enemy can't see player or player is out of enemy's scan range, enemy will switch back to patrol mode
+            
             if (stateTimer < 0 || Vector2.Distance(player.transform.position, enemy.transform.position) > enemy.playerScanDistance)
             {
                 stateMachine.ChangeState(enemy.idleState);
@@ -98,9 +88,6 @@ public class ArcherBattleState : ArcherState
             }
         }
 
-        //this will make enemy move towards player only when player is far from enemy's attack distance
-        //or player is behind enemy
-        //when enemy is close to player it'll be stopped
         if (enemy.IsPlayerDetected() && Vector2.Distance(enemy.transform.position, player.transform.position) < enemy.attackDistance)
         {
             ChangeToIdleAnimation();
@@ -113,8 +100,6 @@ public class ArcherBattleState : ArcherState
     {
         if (Time.time - enemy.lastTimeAttacked >= enemy.attackCooldown && !enemy.isKnockbacked)
         {
-            //enemy's lastTimeAttacked is set in attackState
-            //enemy's attack frequency will be random
             enemy.attackCooldown = Random.Range(enemy.minAttackCooldown, enemy.maxAttackCooldown);
             return true;
         }
@@ -124,8 +109,6 @@ public class ArcherBattleState : ArcherState
 
     private bool CanJump()
     {
-        //if there's a pit behind archer, or there's a wall behind acher,
-        //archer will not jump away
         if (!enemy.GroundBehindCheck() || enemy.WallBehindCheck())
         {
             return false;
@@ -133,7 +116,6 @@ public class ArcherBattleState : ArcherState
 
         if (Time.time - enemy.lastTimeJumped >= enemy.jumpCooldown && !enemy.isKnockbacked)
         {
-            //enemy.lastTimeJumped is set in jumpState
             return true;
         }
 

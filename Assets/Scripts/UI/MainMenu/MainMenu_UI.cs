@@ -10,19 +10,19 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     [SerializeField] private GameObject continueButton;
     [SerializeField] private FadeScreen_UI fadeScreen;
 
-    [Header("NewGame")]
+    [Header("新游戏")]
     [SerializeField] private GameObject newGameConfirmWindow;
 
-    [Header("Options")]
+    [Header("设置")]
     [SerializeField] private GameObject optionsUI;
 
-    [Header("Exit Confirm")]
+    [Header("退出确认窗口")]
     [SerializeField] private GameObject exitConfirmWindow;
 
-    [Header("Audio Settings")]
+    [Header("音效设置")]
     [SerializeField] private VolumeSlider_UI[] volumeSettings;
 
-    [Header("Gameplay Settings")]
+    [Header("GamePlay设置窗口")]
     [SerializeField] private GameplayOptionToggle_UI[] gameplayToggleSettings;
 
     private bool UIKeyFunctioning = true;
@@ -58,7 +58,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            //close all the other UIs
             transform.GetChild(i).gameObject.SetActive(false);
             newGameConfirmWindow.SetActive(true);
         }
@@ -68,7 +67,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            //turn on all the other UIs
             transform.GetChild(i).gameObject.SetActive(true);
             newGameConfirmWindow.SetActive(false);
             exitConfirmWindow.SetActive(false);
@@ -114,7 +112,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     {
         if (optionsUI != null)
         {
-            //turning off all the UIs
             for (int i = 0; i < transform.childCount; i++)
             {
                 transform.GetChild(i).gameObject.SetActive(false);
@@ -128,7 +125,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            //close all the other UIs
             transform.GetChild(i).gameObject.SetActive(false);
             exitConfirmWindow.SetActive(true);
         }
@@ -143,8 +139,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     public void LoadData(SettingsData _data)
     {
         Debug.Log("Loading option data");
-        //audio settings load
-        //volumeSettingsDictionary<exposedParameter, value>
         foreach (var search in _data.volumeSettingsDictionary)
         {
             foreach (var volume in volumeSettings)
@@ -156,7 +150,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
             }
         }
 
-        //gameplay toggle settings load
         foreach (var search in _data.gameplayToggleSettingsDictionary)
         {
             foreach (var toggle in gameplayToggleSettings)
@@ -172,7 +165,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
     public void SaveData(ref SettingsData _data)
     {
         Debug.Log("Saving option data");
-        //Audio setttings save
         _data.volumeSettingsDictionary.Clear();
 
         foreach (var volume in volumeSettings)
@@ -180,7 +172,6 @@ public class MainMenu_UI : MonoBehaviour, ISettingsSaveManager
             _data.volumeSettingsDictionary.Add(volume.parameter, volume.slider.value);
         }
 
-        //gameplay toggle settings save
         _data.gameplayToggleSettingsDictionary.Clear();
 
         foreach (var toggle in gameplayToggleSettings)

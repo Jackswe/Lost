@@ -45,8 +45,6 @@ public class PlayerAirState : PlayerState
 
         if (player.IsGroundDetected())
         {
-            //fix the bug where player will get a bit stuttered when falling onto ground
-            //even keeping pressing moving button
             xInput = Input.GetAxisRaw("Horizontal");
 
             if (xInput != 0)

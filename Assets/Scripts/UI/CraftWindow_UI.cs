@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// 制作窗口
 public class CraftWindow_UI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI itemName;
@@ -39,25 +41,21 @@ public class CraftWindow_UI : MonoBehaviour
     {
         equipmentToCraft = _itemToCraft;
 
-        //clear the craft button events to prevent from redundant functions
         craftButton.onClick.RemoveAllListeners();
 
         if (_itemToCraft.requiredCraftMaterials.Count > materialImage.Length)
         {
-            Debug.Log("Bug! Required craft materials are more than the material slots you made!");
+            Debug.Log("所需材料槽不够");  // TODO
         }
 
-        //clear the color and the icon first
         for (int i = 0; i < materialImage.Length; i++)
         {
             materialImage[i].color = Color.clear;
             materialImage[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.clear;
         }
 
-        // an equipment needs 4 craft materials at most
         for (int i = 0; i < _itemToCraft.requiredCraftMaterials.Count; i++)
         {
-            //setup the required materials (icon and needed amount)
             materialImage[i].sprite = _itemToCraft.requiredCraftMaterials[i].item.icon;
             materialImage[i].color = Color.white;
 
@@ -67,7 +65,6 @@ public class CraftWindow_UI : MonoBehaviour
             requiredMaterialText.color = Color.white;
         }
 
-        //setup the icon, name, stat info of the equipment to craft
         itemIcon.sprite = _itemToCraft.icon;
         itemStatInfo.text = _itemToCraft.GetItemStatInfoAndEffectDescription();
 

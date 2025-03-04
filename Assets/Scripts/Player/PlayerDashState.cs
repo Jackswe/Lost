@@ -11,31 +11,31 @@ public class PlayerDashState : PlayerState
     public override void Enter()
     {
         base.Enter();
-
+        // 冲刺技能释放
         player.skill.dash.CloneOnDashStart(player.transform.position);
 
         stateTimer = player.dashDuration;
         
-        //player is invincible when dashing
+        
         player.stats.BecomeInvincible(true);
     }
 
     public override void Exit()
     {
         base.Exit();
-
+        // 重置速度
         player.SetVelocity(0, rb.velocity.y);
 
         player.skill.dash.CloneOnDashEnd(player.transform.position);
 
-        //player is invincible when dashing
+        
         player.stats.BecomeInvincible(false);
     }
 
     public override void Update()
     {
         base.Update();
-
+        // 如果当前角色状态是冲刺状态则直接返回
         if (stateMachine.currentState != player.dashState)
         {
             return;

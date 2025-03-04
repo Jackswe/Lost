@@ -2,33 +2,35 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+// 剑相关技能实现
 public class SwordSkillController : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
-    private CircleCollider2D cd;
+    private CircleCollider2D cd;   // 旋转检测范围
     private Player player;
 
-    private bool canRotate = true;
-    private bool isReturning;
-    private float swordReturnSpeed;
-    private Vector2 launchSpeed; //to set dust fx direction
+    private bool canRotate = true;      // 是否旋转
+    private bool isReturning;   // 是否正在返回
+    private float swordReturnSpeed; // 返回速度
+    private Vector2 launchSpeed; // 发射速度 设置特效方向
 
-    private float enemyFreezeDuration;
-    private float enemyVulnerableDuration;
+    private float enemyFreezeDuration;      // 敌人冻结时间
+    private float enemyVulnerableDuration;          // 敌人脆弱事件
 
-    [Header("Bounce Sword Info")]
+    [Header("弹跳剑")]
     private bool isBouncingSword;
     private int bounceAmount;
     private float bounceSpeed;
     private List<Transform> bounceTargets = new List<Transform>();
     private int bounceTargetIndex;
 
-    [Header("Pierce Sword Info")]
+    [Header("穿刺剑属性")]
     private bool isPierceSword;
     private int pierceAmount;
 
-    [Header("Saw Spin Sword Info")]
+    [Header("锯旋剑属性")]
     private float maxTravelDistance;
     private float spinDuration;
     private float spinTimer;
@@ -63,7 +65,7 @@ public class SwordSkillController : MonoBehaviour
 
             if (Vector2.Distance(transform.position, player.transform.position) < 1.5)
             {
-                player.CatchSword(); //catch and destroy the sword
+                player.CatchSword(); // 玩家拿到剑之后销毁剑
             }
         }
 
@@ -90,7 +92,7 @@ public class SwordSkillController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //sword will not hit enemy when returning back to player
+        // 返回的时候不检测
         if (isReturning)
         {
             return;
@@ -101,9 +103,7 @@ public class SwordSkillController : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
         }
 
-        //spin sword will stop and spin when hittin the first enemy
-        //in order to make spin sword hit cooldown work correctly
-        //this if statement is necessary
+        
         if (isSpinSword)
         {
             StopAndSpin();
@@ -126,11 +126,9 @@ public class SwordSkillController : MonoBehaviour
         if (collision.GetComponent<Enemy>() != null)
         {
             Enemy enemy = collision.GetComponent<Enemy>();
-
-            //knock back enemy and do damage
+            // 击退并造成伤害
             player.stats.DoDamge(enemy.GetComponent<CharacterStats>());
-
-            //if timestop is unlocked, freeze enemy for a while
+            // 如果解锁了timeStop 则冻结敌人
             if (SkillManager.instance.sword.timeStopUnlocked)
             {
                 enemy.FreezeEnemyForTime(enemyFreezeDuration);
@@ -139,7 +137,6 @@ public class SwordSkillController : MonoBehaviour
 
             if (SkillManager.instance.sword.vulnerabilityUnlocked)
             {
-                //Debug.Log($"Enemy {enemy.gameObject.name} is vulnerable");
                 enemy.stats.BecomeVulnerableForTime(enemyVulnerableDuration);
             }
 
@@ -157,30 +154,26 @@ public class SwordSkillController : MonoBehaviour
 
     private void SwordStuckInto(Collider2D collision)
     {
-        //pierce sword can pierce through enemy but won't pierce through wall or ground
+        // 穿透次数 
         if (pierceAmount > 0 && collision.GetComponent<Enemy>() != null)
         {
             pierceAmount--;
             return;
         }
 
-        //spin sword will stop and spin when hittin the first enemy
-        //spin sword can't stuck into enemy
         if (isSpinSword && collision.GetComponent<Enemy>() != null)
         {
             StopAndSpin();
             return;
         }
-
+        //控制旋转和碰撞体
         canRotate = false;
         cd.enabled = false;
 
         rb.isKinematic = true;
+        //  将刚体设置为静态 (isKinematic = true) 并冻结所有物理行为 (FreezeAll)，以使剑完全停止移动。
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
-        //need to put this here to prevent bounce sword from falling down after finishing bouncing
-        //and bounce sword needs the 4 lines of code above to make it bounce between enemies
-        //if there's no enemies to bounce between, sword will stuck into gournd
         if (isBouncingSword && bounceTargets.Count > 0)
         {
             return;
@@ -189,11 +182,10 @@ public class SwordSkillController : MonoBehaviour
         anim.SetBool("Rotation", false);
         transform.parent = collision.transform;
 
-        //play dust fx
+        // 尘土效果
         ParticleSystem dustFX = GetComponentInChildren<ParticleSystem>();
         if (dustFX != null)
         {
-            //if sword is flying to the left, flip the dust fx
             if (launchSpeed.x < 0)
             {
                 dustFX.transform.localScale = new Vector3(-1, 1, 1);
@@ -207,7 +199,6 @@ public class SwordSkillController : MonoBehaviour
     {
         if (isBouncingSword && bounceTargets.Count > 0)
         {
-            //Debug.Log("Sword is bouncing between enemies");
             transform.position = Vector2.MoveTowards(transform.position, bounceTargets[bounceTargetIndex].position, bounceSpeed * Time.deltaTime);
 
             if (Vector2.Distance(transform.position, bounceTargets[bounceTargetIndex].position) < 0.15f)
@@ -232,10 +223,8 @@ public class SwordSkillController : MonoBehaviour
 
     private void SetupBounceSwordTargets(Collider2D collision)
     {
-        //if the sword has hit the enemy
         if (collision.GetComponent<Enemy>() != null)
         {
-            //if the sword is bounceSword, add enemies to its bounceTargets list
             if (isBouncingSword && bounceTargets.Count <= 0)
             {
                 Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 10);
@@ -249,7 +238,6 @@ public class SwordSkillController : MonoBehaviour
                 }
             }
 
-            //sort the bounceTargets by distance to player (from small to big)
             bounceTargets.Sort(new SortByDistanceToPlayer_BounceSwordTargets());
         }
     }
@@ -258,7 +246,7 @@ public class SwordSkillController : MonoBehaviour
     {
         if (isSpinSword)
         {
-            //if sword has reached the maxTravelDistance, stop and spin
+            // 如果剑到了最远距离还没有停下来的话 则直接停下旋转
             if (Vector2.Distance(player.transform.position, transform.position) >= maxTravelDistance && !wasStopped)
             {
                 StopAndSpin();
@@ -269,7 +257,6 @@ public class SwordSkillController : MonoBehaviour
                 spinTimer -= Time.deltaTime;
                 spinHitTimer -= Time.deltaTime;
 
-                //spin sword will slowly move to enemy if entering spin mode
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x + spinDirection, transform.position.y), 1.5f * Time.deltaTime);
 
                 if (spinTimer < 0)
@@ -338,16 +325,12 @@ public class SwordSkillController : MonoBehaviour
 
     public void ReturnSword()
     {
-        //can't return sword while bouncing between enemies
         if (bounceTargets.Count > 0)
         {
             return;
         }
 
-        //get rid of the impact of gravity when returning the sword
-        //in order to make the sword directly fly back to the player when returning
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        //rb.isKinematic = false;
         transform.parent = null;
         isReturning = true;
     }

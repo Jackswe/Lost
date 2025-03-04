@@ -9,7 +9,6 @@ public class FreezeEnemy_Effect : ItemEffect
 
     public override void ExecuteEffect(Transform _spawnTransform)
     {
-        //freeze enemy effect will only be triggered when HP is below 50%
         PlayerStats playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
         if (playerStats.currentHP > playerStats.getMaxHP() * 0.5)
         {

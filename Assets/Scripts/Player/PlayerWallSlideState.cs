@@ -32,14 +32,12 @@ public class PlayerWallSlideState : PlayerState
             stateMachine.ChangeState(player.airState);
         }
 
-        //if pressing down while in wallslide, speeding up the slide speed
         if (yInput < 0)
         {
             player.SetVelocity(0, rb.velocity.y);
         }
         else
         {
-            //default wallslide speed
             player.SetVelocity(0, rb.velocity.y * 0.2f);
         }
 

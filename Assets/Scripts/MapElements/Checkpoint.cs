@@ -39,7 +39,7 @@ public class Checkpoint : MonoBehaviour
         activated = true;
     }
 
-    [ContextMenu("Generate checkpoint ID")]
+    [ContextMenu("生成检查点ID")]
     private void GenerateCheckpointID()
     {
         checkpointID = System.Guid.NewGuid().ToString();

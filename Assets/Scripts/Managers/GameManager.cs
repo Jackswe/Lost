@@ -12,11 +12,12 @@ public class GameManager : MonoBehaviour, IGameProgressionSaveManager
     [SerializeField] private Checkpoint[] checkpoints;
     public string lastActivatedCheckpointID { get; set; }
 
-    [Header("Dropped Currency")]
+    [Header("掉落")]
     [SerializeField] private GameObject deathBodyPrefab;
     public int droppedCurrencyAmount;
     [SerializeField] private Vector2 deathPosition;
 
+    // 记录地图中已使用或已被交互的元素的ID
     //public List<ItemObject> pickedUpItemInMapList { get; set; }
     public List<int> UsedMapElementIDList {  get; set; }
 
@@ -87,9 +88,6 @@ public class GameManager : MonoBehaviour, IGameProgressionSaveManager
             deathBody.GetComponent<DroppedCurrencyController>().droppedCurrency = droppedCurrencyAmount;
         }
 
-        //to prevent from generating a death body on ground
-        //when player is not dead in the last life with some currency left
-        //and chose to save and continue game;
         droppedCurrencyAmount = 0;
     }
 
@@ -171,30 +169,22 @@ public class GameManager : MonoBehaviour, IGameProgressionSaveManager
     {
         LoadDroppedCurrency(_data);
 
-        //picked up item-in-map will get destoyed automatically in ItemObject script
         LoadPickedUpItemInMapIDList(_data);
         //LoadPickedUpItemInMapList(_data);
 
-        //activate all the checkpoints which are saved as activated
         LoadCheckpoints(_data);
 
         LoadLastActivatedCheckpoint(_data);
 
-        //player will be spawned at the closest activated checkpoint
-        //SpawnPlayerAtClosestActivatedCheckpoint(_data);
-
-        //player will be spawned at the last activated checkpoint
         SpawnPlayerAtLastActivatedCheckpoint(_data);
     }
 
     public void SaveData(ref GameData _data)
     {
-        //saving death position and dropped currency
         _data.droppedCurrencyAmount = droppedCurrencyAmount;
         _data.deathPosition = player.transform.position;
 
 
-        //prevent from saving duplicated redundant checkpoint data
         _data.checkpointsDictionary.Clear();
 
         _data.closestActivatedCheckpointID = FindClosestActivatedCheckpoint()?.checkpointID;
@@ -204,10 +194,8 @@ public class GameManager : MonoBehaviour, IGameProgressionSaveManager
             _data.checkpointsDictionary.Add(checkpoint.checkpointID, checkpoint.activated);
         }
 
-        //save last activated checkpoint id
         _data.lastActivatedCheckpointID = lastActivatedCheckpointID;
 
-        //save pciked up item in map list;
         _data.UsedMapElementIDList.Clear();
         foreach (var itemID in UsedMapElementIDList)
         {

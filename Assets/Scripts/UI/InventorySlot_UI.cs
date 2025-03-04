@@ -8,7 +8,7 @@ public class InventorySlot_UI : MonoBehaviour, IPointerDownHandler, IPointerEnte
     [SerializeField] protected Image itemImage;
     [SerializeField] protected TextMeshProUGUI itemText;
 
-    public InventorySlot inventorySlot; //value is assigned in UpdateInventroySlotUI
+    public InventorySlot inventorySlot; 
 
     protected UI ui;
 
@@ -50,14 +50,11 @@ public class InventorySlot_UI : MonoBehaviour, IPointerDownHandler, IPointerEnte
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        //when clikcing the invisible slot UI,
-        //directly return to prevent bugs
         if (inventorySlot == null)
         {
             return;
         }
 
-        //LCtrl + mouse_left to delete items from inventory
         if (Input.GetKey(KeyCode.LeftControl))
         {
             Inventory.instance.RemoveItem(inventorySlot.item);
@@ -88,8 +85,6 @@ public class InventorySlot_UI : MonoBehaviour, IPointerDownHandler, IPointerEnte
 
         ItemData_Equipment equipment = inventorySlot.item as ItemData_Equipment;
 
-        //if the item slot is on the lower side of the screen,
-        //item tooltip should be above the item
         if (transform.position.y <= Screen.height * 0.5)
         {
             if (equipment.GetItemStatInfoAndEffectDescription().Length >= 50)
@@ -101,7 +96,7 @@ public class InventorySlot_UI : MonoBehaviour, IPointerDownHandler, IPointerEnte
                 yOffset = Screen.height * 0.01f;
             }
         }
-        else //if the item slot is on the upper side of the screen, item tooltip should be below the item
+        else 
         {
             yOffset = -Screen.height * 0.05f;
         }

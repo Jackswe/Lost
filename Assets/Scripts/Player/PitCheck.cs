@@ -41,7 +41,6 @@ public class PitCheck : MonoBehaviour
         }
         else
         {
-            //can't let this influence camera movement on downable platform
             if (player.isOnPlatform)
             {
                 return;

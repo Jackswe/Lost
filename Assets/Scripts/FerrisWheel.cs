@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
 
+
+
+// FerrisWheel≤‚ ‘
 public class FerrisWheel : MonoBehaviour
 {
     [SerializeField] private float rotateSpeed;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.Rotate(0, 0, rotateSpeed * Time.deltaTime);

@@ -37,7 +37,6 @@ public class Enemy_Skeleton : Enemy
     {
         base.Update();
 
-        //to prevent counter image from always showing when skeleton's attack got interrupted
         if (stateMachine.currentState != attackState)
         {
             CloseCounterAttackWindow();

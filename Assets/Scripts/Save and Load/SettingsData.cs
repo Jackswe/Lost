@@ -5,31 +5,29 @@ using UnityEngine;
 [System.Serializable]
 public class SettingsData
 {
-    [Header("Audio settings")]
+    [Header("Audio设置")]
     public SerializableDictionary<string, float> volumeSettingsDictionary;
 
-    [Header("Keybind Settings")]
+    [Header("按键绑定设置")]
     public SerializableDictionary<string, KeyCode> keybindsDictionary;
     //public SerializableDictionary<string, KeyCode> keybindsDictionary_Chinese; 
 
-    [Header("Gameplay Settings")]
+    [Header("Gameplay设置")]
     public SerializableDictionary<string, bool> gameplayToggleSettingsDictionary;
 
-    [Header("Language Settings")]
+    [Header("语言设置 1中文 0 英文")]
     public int localeID; //0 for english, 1 for chinese
 
     public SettingsData()
     {
-        //default language is english
-        localeID = 0;
-
+        localeID = 1;
+        // 初始化数据
         //volumeSettingsDictionary<exposedParameter, value>
         volumeSettingsDictionary = new SerializableDictionary<string, float>();
 
         keybindsDictionary = new SerializableDictionary<string, KeyCode>();
         SetupDefaultKeybinds();
 
-        //gameplay toggle settings
         gameplayToggleSettingsDictionary = new SerializableDictionary<string, bool>();
     }
 

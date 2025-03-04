@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// ±¬Õ¨Ïú»õ¿ØÖÆ
 public class ShadyExplosion_Controller : MonoBehaviour
 {
     private Animator anim;

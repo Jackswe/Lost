@@ -44,7 +44,7 @@ public class PlayerStats : CharacterStats
                     playerFX.ScreenShake(playerFX.shakeDirection_medium);
                 }
             }
-            //else //for throw sword
+            //else 
             //{
             //    fx.ScreenShake(fx.shakeDirection_medium);
             //}
@@ -61,13 +61,12 @@ public class PlayerStats : CharacterStats
 
         int takenDamage = DecreaseHPBy(_damage, _isCrit);
 
-        //Debug.Log($"{gameObject.name} received {_damage} damage");
 
         _attackee.GetComponent<Entity>()?.DamageFlashEffect();
 
         SlowerPlayerMoveSpeedForTime(0.2f);
 
-        //player will get knockbacked when the taken damage is bigger than 30% of maxHP
+        //当玩家收到的伤害大于最大血量的30% 则造成击退效果
         if (takenDamage >= player.stats.getMaxHP() * 0.3f)
         {
             _attackee.GetComponent<Entity>()?.DamageKnockbackEffect(_attacker, _attackee);
@@ -84,7 +83,6 @@ public class PlayerStats : CharacterStats
     {
         float defaultMoveSpeed = player.moveSpeed;
 
-        //im lazy here so i just use duration to slower player move speed
         player.moveSpeed = player.moveSpeed * _duration;
 
         Invoke("ReturnToDefaultMoveSpeed", _duration);
@@ -100,13 +98,19 @@ public class PlayerStats : CharacterStats
         base.Die();
 
         player.Die();
-
+        // 掉落所有金币
         GameManager.instance.droppedCurrencyAmount = PlayerManager.instance.GetCurrentCurrency();
         PlayerManager.instance.currency = 0;
 
         GetComponent<PlayerItemDrop>()?.GenrateDrop();
     }
 
+    /// <summary>
+    /// 减少血量
+    /// </summary>
+    /// <param name="_takenDamage"></param>
+    /// <param name="_isCrit"> s是否暴击</param>
+    /// <returns></returns>
     public override int DecreaseHPBy(int _takenDamage, bool _isCrit)
     {
         base.DecreaseHPBy(_takenDamage, _isCrit);
@@ -127,7 +131,6 @@ public class PlayerStats : CharacterStats
 
     public override void OnEvasion()
     {
-        Debug.Log("Player evaded attack!");
         player.skill.dodge.CreateMirageOnDodge();
     }
 
@@ -144,13 +147,11 @@ public class PlayerStats : CharacterStats
 
         if (crit)
         {
-            Debug.Log("Critical Attack!");
             _totalDamage = CalculatCritDamage(_totalDamage);
         }
 
         fx.CreateHitFX(_targetStats.transform, crit);
 
-        //clone attack damage should be less than player's damage
         if (_cloneAttackDamageMultipler > 0)
         {
             _totalDamage = Mathf.RoundToInt(_totalDamage * _cloneAttackDamageMultipler);

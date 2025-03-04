@@ -19,20 +19,20 @@ public class UI : MonoBehaviour, ISettingsSaveManager
     public CraftWindow_UI craftWindow;
 
     [Space]
-    [Header("End Screen")]
+    [Header("结束窗口")]
     public FadeScreen_UI fadeScreen; //when player is dead, play the fadeout animation
     [SerializeField] private GameObject endText;
     [SerializeField] private GameObject tryAgainButton;
 
-    [Header("Thank you for playing")]
+    [Header("感谢游玩窗口")]
     [SerializeField] private GameObject thankYouForPlayingText;
     [SerializeField] private TextMeshProUGUI achievedEndingText;
     [SerializeField] private GameObject returnToTitleButton;
 
-    [Header("Audio Settings")]
+    [Header("音效设置窗口")]
     [SerializeField] private VolumeSlider_UI[] volumeSettings;
 
-    [Header("Gameplay Settings")]
+    [Header("Gameplay设置窗口")]
     [SerializeField] private GameplayOptionToggle_UI[] gameplayToggleSettings;
 
     private bool UIKeyFunctioning = true;
@@ -50,19 +50,14 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             instance = this;
         }
 
-        //need this
-        //or put UnlockSkill() in IPointerDownHandler in SkllTreeSlot_UI
-        //to make sure the event listener order in skill tree ui is in correct order
-        //and skill tree save system works properly
+        
         skillTree_UI.SetActive(true);
 
 
-        //itemToolTip = GetComponentInChildren<ItemToolTip_UI>();
     }
 
     private void Start()
     {
-        //No menu except ingame_UI is open in the beginning of game
         SwitchToMenu(ingame_UI);
         itemToolTip.gameObject.SetActive(false);
         statToolTip.gameObject.SetActive(false);
@@ -93,9 +88,7 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             OpenMenuByKeyBoard(skillTree_UI);
         }
 
-        //If there's already a non-ingameUI open currently
-        //Esc will close the UI and open ingame UI
-        //else, Esc will open Options UI
+       
         if (UIKeyFunctioning && Input.GetKeyDown(KeyCode.Escape))
         {
             if (currentUI != ingame_UI)
@@ -114,10 +107,8 @@ public class UI : MonoBehaviour, ISettingsSaveManager
 
     public void SwitchToMenu(GameObject _menu)
     {
-        //close all the UIs
         for (int i = 0; i < transform.childCount; i++)
         {
-            //keep black screen active
             bool isFadeScreen = (transform.GetChild(i).GetComponent<FadeScreen_UI>() != null);
 
             if (!isFadeScreen)
@@ -127,7 +118,6 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             }
         }
 
-        //set the target UI active
         if (_menu != null)
         {
             _menu.SetActive(true);
@@ -147,9 +137,7 @@ public class UI : MonoBehaviour, ISettingsSaveManager
 
     public void OpenMenuByKeyBoard(GameObject _menu)
     {
-        //same as if(_menu != null && _menu.active == true)
-        //activeSelf returns the active state of gameobject
-        //Here means if re-entering (double press the same UI key) the same menu which is already open, then close the menu UI and open ingame UI
+       
         if (_menu != null && _menu.activeSelf)
         {
             //_menu.SetActive(false);
@@ -159,7 +147,7 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             statToolTip.gameObject.SetActive(false);
             SwitchToMenu(ingame_UI);
         }
-        else if (_menu != null && !_menu.activeSelf)  //if the menu to switch is not open, then switch to that menu
+        else if (_menu != null && !_menu.activeSelf)  
         {
             SwitchToMenu(_menu);
         }
@@ -171,22 +159,20 @@ public class UI : MonoBehaviour, ISettingsSaveManager
         float _xOffset = 0;
         float _yOffset = 0;
 
-        //if mouse is on the right side of the screen
         if (mousePosition.x >= Screen.width * 0.5)
         {
             _xOffset = -Screen.width * _xOffsetRate_left;
         }
-        else //if mouse is on the left side of the screen
+        else 
         {
             _xOffset = Screen.width * _xOffsetRate_right;
         }
 
-        //if mouse is on the upper side of the screen
         if (mousePosition.y >= Screen.height * 0.5)
         {
             _yOffset = -Screen.height * _yOffsetRate_down;
         }
-        else //if mouse is on the lower side of the screen
+        else 
         {
             _yOffset = Screen.height * _yOffsetRate_up;
         }
@@ -200,22 +186,21 @@ public class UI : MonoBehaviour, ISettingsSaveManager
         float _xOffset = 0;
         float _yOffset = 0;
 
-        //if slotUI is on the right side of the screen
         if (_slotUITransform.position.x >= Screen.width * 0.5)
         {
             _xOffset = -Screen.width * _xOffsetRate_left;
         }
-        else //if slotUI is on the left side of the screen
+        else 
         {
             _xOffset = Screen.width * _xOffsetRate_right;
         }
 
-        //if slotUI is on the upper side of the screen
+        
         if (_slotUITransform.position.y >= Screen.height * 0.5)
         {
             _yOffset = -Screen.height * _yOffsetRate_down;
         }
-        else //if slotUI is on the lower side of the screen
+        else 
         {
             _yOffset = Screen.height * _yOffsetRate_up;
         }
@@ -290,8 +275,6 @@ public class UI : MonoBehaviour, ISettingsSaveManager
 
     public void LoadData(SettingsData _data)
     {
-        //audio settings load
-        //volumeSettingsDictionary<exposedParameter, value>
         foreach (var search in _data.volumeSettingsDictionary)
         {
             foreach (var volume in volumeSettings)
@@ -303,7 +286,6 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             }
         }
 
-        //gameplay toggle settings load
         foreach (var search in _data.gameplayToggleSettingsDictionary)
         {
             foreach (var toggle in gameplayToggleSettings)
@@ -318,7 +300,6 @@ public class UI : MonoBehaviour, ISettingsSaveManager
 
     public void SaveData(ref SettingsData _data)
     {
-        //Audio setttings save
         _data.volumeSettingsDictionary.Clear();
 
         foreach (var volume in volumeSettings)
@@ -326,7 +307,6 @@ public class UI : MonoBehaviour, ISettingsSaveManager
             _data.volumeSettingsDictionary.Add(volume.parameter, volume.slider.value);
         }
 
-        //gameplay toggle settings save
         _data.gameplayToggleSettingsDictionary.Clear();
 
         foreach (var toggle in gameplayToggleSettings)

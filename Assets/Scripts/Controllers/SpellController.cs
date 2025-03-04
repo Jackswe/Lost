@@ -23,7 +23,6 @@ public class SpellController : MonoBehaviour
         {
             if (hit.GetComponent<Player>() != null)
             {
-                //Debug.Log("Player damaged by spell");
                 enemyStats.DoDamge(hit.GetComponent<PlayerStats>());
             }
         }

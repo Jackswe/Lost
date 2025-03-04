@@ -4,26 +4,26 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// 克隆攻击技能分支实现
 public class CloneSkill : Skill
 {
-    //assign different kinds of clones' attack damage multiplier to this variable
     private float currentCloneAttackDamageMultipler;
 
-    //clone == mirage
-    [Header("Clone Info")]
+    [Header("克隆属性")]
     [SerializeField] private GameObject clonePrefab;
     [SerializeField] private float cloneDuration;
     [SerializeField] private float colorLosingSpeed;
 
 
-    [Header("Mirage Attack Unlock Info")] //unlock the clone ability, clone will attack enemy as the default ability
+    [Header("幻影攻击属性")] 
     [SerializeField] private SkillTreeSlot_UI mirageAttackUnlockButton;
     [Range(0f, 1f)]
-    [SerializeField] private float cloneAttackDamageMultiplier;  //clone attack damage should be less than player's damage
+    [SerializeField] private float cloneAttackDamageMultiplier;  
     public bool mirageAttackUnlocked { get; private set; }
 
 
-    [Header("Aggressive Mirage Unlock Info")] //aggressive mirage will make clone do more damage and able to apply on-hit effects
+    [Header("斗争幻影解锁属性")] 
     [SerializeField] private SkillTreeSlot_UI aggressiveMirageUnlockButton;
     [Range(0f, 1f)]
     [SerializeField] private float aggressiveCloneAttackDamageMultiplier;
@@ -31,17 +31,17 @@ public class CloneSkill : Skill
     public bool aggressiveCloneCanApplyOnHitEffect { get; private set; }
 
 
-    [Header("Multiple Mirage Unlock Info")] //clone can create clone
+    [Header("多重幻影解锁属性")] 
     [SerializeField] private SkillTreeSlot_UI multipleMirageUnlockButton;
     [Range(0f, 1f)]
-    [SerializeField] private float duplicateCloneAttackDamageMultiplier;  //duplicate clone deals 30% damage of player
+    [SerializeField] private float duplicateCloneAttackDamageMultiplier;  
     public bool multipleMirageUnlocked { get; private set; }
     [SerializeField] private float duplicatePossibility;
-    public int maxDuplicateCloneAmount; //prevent creating endless duplicate clones
+    public int maxDuplicateCloneAmount; 
     [HideInInspector] public int currentDuplicateCloneAmount;
 
 
-    [Header("Crystal Mirage Unlock Info")]
+    [Header("水晶幻影解锁属性")]
     [SerializeField] private SkillTreeSlot_UI crystalMirageUnlockButton;
     public bool crystalMirageUnlocked { get; private set; }
 
@@ -57,7 +57,6 @@ public class CloneSkill : Skill
     }
 
 
-    //prevent creating endless duplicate clones
     public void RefreshCurrentDuplicateCloneAmount()
     {
         currentDuplicateCloneAmount = 0;
@@ -65,11 +64,6 @@ public class CloneSkill : Skill
 
     public void CreateClone(Vector3 _position)
     {
-        //if replace clone by crstal is enabled,
-        //will not create clones anymore
-        //**************************************************************************
-        //***Cannot enable Replace Clone By Crystal when Clone Mirage is enabled***
-        //**************************************************************************
         if (crystalMirageUnlocked)
         {
             //if (SkillManager.instance.crystal.crystalMirageUnlocked)
@@ -79,7 +73,6 @@ public class CloneSkill : Skill
             //        "\nBecase Replace_Clone_By_Crystal in Clone Skill is ENABLED");
             //}
 
-            //prevent creating multiple crystals
             //SkillManager.instance.crystal.DestroyCurrentCrystal_InCrystalMirageOnly();
 
             if (SkillManager.instance.crystal.SkillIsReadyToUse())
@@ -89,8 +82,6 @@ public class CloneSkill : Skill
             return;
         }
 
-        //prevent creating endless duplicate clones
-        //or not being able to create duplicate clones
         RefreshCurrentDuplicateCloneAmount();
 
         GameObject newClone = Instantiate(clonePrefab, _position, Quaternion.identity);
@@ -106,7 +97,6 @@ public class CloneSkill : Skill
 
         newCloneScript.SetupClone(cloneDuration, colorLosingSpeed, mirageAttackUnlocked, FindClosestEnemy(newClone.transform), multipleMirageUnlocked, duplicatePossibility, currentCloneAttackDamageMultipler);
 
-        //prevent creating endless duplicate clones
         currentDuplicateCloneAmount++;
     }
 

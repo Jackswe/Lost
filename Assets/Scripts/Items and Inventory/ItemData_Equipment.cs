@@ -3,10 +3,10 @@ using UnityEngine;
 
 public enum EquipmentType
 {
-    Weapon,
-    Armor,
-    Charm,
-    Flask
+    Weapon,     // 武器
+    Armor,      // 护甲
+    Charm,      // 饰品
+    Flask       // 药水
 }
 
 [CreateAssetMenu(fileName = "New Item Data", menuName = "Data/Equipment")]
@@ -14,35 +14,35 @@ public class ItemData_Equipment : ItemData
 {
     public EquipmentType equipmentType;
 
-    [Header("Unique Item Effect info")]
+    [Header("装备道具效果")]
     //public float itemCooldown;
     //public bool itemUsed { get; set; }
     //public float itemLastUseTime { get; set; }
     public ItemEffect[] itemEffects;
 
-    [Header("Major Stats")]
+    [Header("主属性")]
     public int strength;  //damage + 1; crit_power + 1%
     public int agility;  //evasion + 1%; crit_chance + 1%
     public int intelligence; //magic_damage + 1; magic_resistance + 3
     public int vitaliy; //maxHP + 5
 
-    [Header("Defensive Stats")]
+    [Header("防御属性")]
     public int maxHP;
     public int armor;
     public int evasion;
     public int magicResistance;
 
-    [Header("Offensive Stats")]
+    [Header("进攻属性")]
     public int damage;
     public int critChance;
-    public int critPower;  //critPower = 150% by default
+    public int critPower; 
 
-    [Header("Magic Stats")]
+    [Header("魔法属性")]
     public int fireDamage;
     public int iceDamage;
     public int lightningDamage;
 
-    [Header("Craft Requirements")]
+    [Header("制作材料")]
     public List<InventorySlot> requiredCraftMaterials;
 
     private int statInfoLength;
@@ -50,6 +50,7 @@ public class ItemData_Equipment : ItemData
 
     public void AddModifiers()
     {
+        // 装备的时候修改属性
         PlayerStats playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
 
         playerStats.strength.AddModifier(strength);
@@ -94,7 +95,6 @@ public class ItemData_Equipment : ItemData
         playerStats.lightningDamage.RemoveModifier(lightningDamage);
     }
 
-    //will be triggerd in scripts like animationTrigger when attacking enemies
     //private void ExecuteItemEffect(Transform _spawnTransform)
     //{
     //    foreach (var effect in itemEffects)
@@ -119,6 +119,9 @@ public class ItemData_Equipment : ItemData
     //    }
     //}
 
+    /// <summary>
+    /// 更新道具使用状态
+    /// </summary>
     public void RefreshUseState()
     {
         //itemUsed = false;
@@ -133,9 +136,7 @@ public class ItemData_Equipment : ItemData
 
     public void ExecuteItemEffect_ConsiderCooldown(Transform _spawnTransform)
     {
-        // >= here to prevent the case
-        // where mutilple 0-cooldown effects need to get executed at the same time
-        // but all of the effects next to the first one will be in cooldown
+        // 触发道具效果之前 检查道具效果冷却时间 有多个效果的话需要每个单独检测 只有冷却的效果才能够进行触发
 
         foreach (var effect in itemEffects)
         {
@@ -148,21 +149,17 @@ public class ItemData_Equipment : ItemData
                 effect.effectLastUseTime = Time.time;
                 effect.effectUsed = true;
                 Inventory.instance.UpdateStatUI();
-                Debug.Log($"Use Item Effect: {effect.name}");
             }
             else
             {
-                Debug.Log("Item Effect is in cooldown");
+                Debug.Log("道具效果正在冷却！！！");
             }
         }
     }
 
     public void ReleaseSwordArcane_ConsiderCooldown()
     {
-        // >= here to prevent the case
-        // where mutilple 0-cooldown effects need to get executed at the same time
-        // but all of the effects next to the first one will be in cooldown
-
+       
         foreach (var effect in itemEffects)
         {
             bool canUseEffect = Time.time >= effect.effectLastUseTime + effect.effectCooldown;
@@ -173,11 +170,10 @@ public class ItemData_Equipment : ItemData
                 effect.effectLastUseTime = Time.time;
                 effect.effectUsed = true;
                 Inventory.instance.UpdateStatUI();
-                Debug.Log($"Use Sword Arcane: {effect.name}");
             }
             else
             {
-                Debug.Log("Item Effect is in cooldown");
+                Debug.Log("道具效果正在冷却！！！");
             }
         }
     }
@@ -187,29 +183,28 @@ public class ItemData_Equipment : ItemData
         sb.Length = 0;
         statInfoLength = 0;
 
-        AddItemStatInfo(strength, "Strength");
-        AddItemStatInfo(agility, "Agility");
-        AddItemStatInfo(intelligence, "Intelligence");
-        AddItemStatInfo(vitaliy, "Vitality");
+        AddItemStatInfo(strength, "力量");
+        AddItemStatInfo(agility, "敏捷");
+        AddItemStatInfo(intelligence, "智力");
+        AddItemStatInfo(vitaliy, "耐力");
 
-        AddItemStatInfo(damage, "Damage");
-        AddItemStatInfo(critChance, "Crit Chance");
-        AddItemStatInfo(critPower, "Crit Power");
+        AddItemStatInfo(damage, "伤害");
+        AddItemStatInfo(critChance, "暴击率");
+        AddItemStatInfo(critPower, "暴击伤害");
 
-        AddItemStatInfo(maxHP, "Max HP");
-        AddItemStatInfo(evasion, "Evasion");
-        AddItemStatInfo(armor, "Armor");
-        AddItemStatInfo(magicResistance, "Magic Resist");
+        AddItemStatInfo(maxHP, "HP");
+        AddItemStatInfo(evasion, "闪避率");
+        AddItemStatInfo(armor, "护甲");
+        AddItemStatInfo(magicResistance, "魔法抗性");
 
-        AddItemStatInfo(fireDamage, "Fire Dmg");
-        AddItemStatInfo(iceDamage, "Ice Dmg");
-        AddItemStatInfo(lightningDamage, "Lightning Dmg");
+        AddItemStatInfo(fireDamage, "火焰伤害");
+        AddItemStatInfo(iceDamage, "冰冻伤害");
+        AddItemStatInfo(lightningDamage, "雷电伤害");
 
         if (itemEffects.Length > 0 && statInfoLength > 0)
         {
             if (itemEffects[0].effectDescription.Length > 0)
             {
-                //add space between stat info and effect description;
                 sb.AppendLine();
             }
         }
@@ -218,7 +213,6 @@ public class ItemData_Equipment : ItemData
         {
             sb.AppendLine();
 
-            //english
             if (LanguageManager.instance.localeID == 0)
             {
                 if (itemEffects[i].effectDescription.Length > 0)
@@ -226,7 +220,6 @@ public class ItemData_Equipment : ItemData
                     sb.Append($"[unique effect]\n{itemEffects[i].effectDescription}\n");
                 }
             }
-            //chinese
             else if (LanguageManager.instance.localeID == 1)
             {
                 if (itemEffects[i].effectDescription_Chinese.Length > 0)
@@ -238,7 +231,6 @@ public class ItemData_Equipment : ItemData
             statInfoLength++;
         }
 
-        //make sure the space below unique effect is same as the one below stat info so that item tool tip looks nicer
         if (sb.ToString()[sb.Length - 1] == '\n')
         {
             sb.Remove(sb.Length - 1, 1);
@@ -248,9 +240,6 @@ public class ItemData_Equipment : ItemData
         //if (statInfoLength < minStatInfoLength)
         //{
         //    int _numberOfLinesToApped = minStatInfoLength - statInfoLength;
-        //    //StringBuilder.Append() will auto add a line
-        //    //if the String is empty
-        //    //so here make numberOfLinesToAppend-- to prevent adding an extra line
         //    if (statInfoLength == 0)
         //    {
         //        _numberOfLinesToApped--;

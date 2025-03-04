@@ -31,7 +31,6 @@ public class DeathBringerDeathState : DeathBringerState
     {
         base.Update();
 
-        //enemy is gonna fly up before he dies
         if (stateTimer > 0 && canBeFliedUP)
         {
             enemy.SetVelocity(0, 10);

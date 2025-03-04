@@ -32,13 +32,11 @@ public class DeathBringerCastState : DeathBringerState
 
         castTimer -= Time.deltaTime;
 
-        //only when death bringer has casted all the spells can he exit cast state
         if (CanCast())
         {
             enemy.CastSpell();
         }
         
-        //if death bringer is out of cast amount, he'll exit cast state
         if (castAmount <= 0)
         {
             stateMachine.ChangeState(enemy.teleportState);

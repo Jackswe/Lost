@@ -11,7 +11,7 @@ public class FileDataHandler
     private string dataFileName = "";
 
     private bool encryptData = false;
-    private string codeWord = "Zakozako~";
+    private string codeWord = "WangYi";   // code词 盐值
 
     public FileDataHandler(string _dataDirPath, string _dataFileName, bool _encryptData)
     {
@@ -20,7 +20,6 @@ public class FileDataHandler
         encryptData = _encryptData;
     }
 
-    //maybe <T> here?
     #region Settings Load and Save
     public void SaveSettings(SettingsData _data)
     {
@@ -28,9 +27,8 @@ public class FileDataHandler
 
         try
         {
-            //create file directory to store the save file
+            
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-            //parse the savedata to json, true means the json file will be formatted and easier to read
             string dataToStore = JsonUtility.ToJson(_data, true);
 
             if (encryptData)
@@ -76,7 +74,7 @@ public class FileDataHandler
                     dataToLoad = EncryptAndDecrypt(dataToLoad);
                 }
 
-                //read json from the save file to gamedata
+                
                 loadData = JsonUtility.FromJson<SettingsData>(dataToLoad);
             }
             catch (Exception e)
@@ -96,7 +94,7 @@ public class FileDataHandler
 
         try
         {
-            //create file directory to store the save file
+            // 创建文件
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             //parse the savedata to json, true means the json file will be formatted and easier to read
             string dataToStore = JsonUtility.ToJson(_data, true);
@@ -168,6 +166,7 @@ public class FileDataHandler
         }
     }
 
+    // 数据加密
     private string EncryptAndDecrypt(string _data)
     {
         string result = "";

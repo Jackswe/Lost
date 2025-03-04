@@ -5,6 +5,7 @@ using UnityEngine.Experimental.AI;
 [System.Serializable]
 public class GameData
 {
+    // 存档数据
     public int currecny;
 
     public SerializableDictionary<string, bool> skillTree;
@@ -15,21 +16,21 @@ public class GameData
     public string closestActivatedCheckpointID;
     public string lastActivatedCheckpointID;
 
-    [Header("Dropped Currency")]
+    [Header("金币掉落")]
     public int droppedCurrencyAmount;
     public Vector2 deathPosition;
 
-    [Header("Map Elements")]
+    [Header("地图元素信息")]
     public List<int> UsedMapElementIDList;
 
     public GameData()
     {
-        //Game Progression
+        // 基本数据
         this.currecny = 0;
         this.droppedCurrencyAmount = 0;
         this.deathPosition = Vector2.zero;
 
-        //setup picked up item in map list, by default it should be empty
+        // 设置在地图上的拾取的物品列表
         UsedMapElementIDList = new List<int>();
         //pickedUpItemInMapList = new List<ItemObject>();
 

@@ -24,18 +24,15 @@ public class KeybindConflictController : MonoBehaviour
 
     public void TranslateBehaveNameAndUniformBehaveKeybindName()
     {
-        //chinese
         if (LanguageManager.instance.localeID == 1)
         {
             behaveName_InUI.text = LanguageManager.instance.EnglishToChineseKeybindsDictionary[behaveName];
         }
-        //english
         else if (LanguageManager.instance.localeID == 0)
         {
             behaveName_InUI.text = behaveName;
         }
 
-        //uniform keybind will auto detect language and translate
         behaveKeybind_InUI.text = UniformKeybindName(behaveKeybind);
     }
 
@@ -46,7 +43,6 @@ public class KeybindConflictController : MonoBehaviour
             _behaveKeybind_InUI = _behaveKeybind_InUI.Remove(0, 5);
         }
 
-        //english
         if (LanguageManager.instance.localeID == 0)
         {
             if (_behaveKeybind_InUI.Equals("Mouse0"))
@@ -64,7 +60,6 @@ public class KeybindConflictController : MonoBehaviour
                 _behaveKeybind_InUI = _behaveKeybind_InUI.Insert(4, " ");
             }
         }
-        //chinese
         else if (LanguageManager.instance.localeID == 1)
         {
             if (_behaveKeybind_InUI.Equals("Mouse0"))

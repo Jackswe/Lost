@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class ParrySkill : Skill
 {
-    [Header("Parry Unlock Info")]
+    [Header("格挡 Unlock Info")]
     [SerializeField] private SkillTreeSlot_UI parryUnlockButton;
     public bool parryUnlocked {  get; private set; }
 
-    [Header("Parry Recover HP/FP Unlock Info")]
+    [Header("格挡恢复HP/FP Unlock Info")]
     [SerializeField] private SkillTreeSlot_UI parryRecoverUnlockButton;
     public bool parryRecoverUnlocked { get; private set; }
     [Range(0f, 1f)]
     [SerializeField] private float recoverPercentage;
 
-    [Header("Parry With Mirage Unlock Info")]
+    [Header("格挡幻影 Unlock Info")]
     [SerializeField] private SkillTreeSlot_UI parryWithMirageUnlockButton;
     public bool parryWithMirageUnlocked { get; private set; }
 
@@ -40,7 +40,6 @@ public class ParrySkill : Skill
 
     public void RecoverHPFPInSuccessfulParry()
     {
-        //only did HP cuz FP is not implemented yet
         if (parryRecoverUnlocked == true)
         {
             int recoverAmount = Mathf.RoundToInt(player.stats.getMaxHP() * recoverPercentage);

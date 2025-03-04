@@ -26,8 +26,6 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Update();
 
-        //if player is already not in ilde state,
-        //its not gonna execute the remaining code in idleState update function
         if (stateMachine.currentState != player.idleState)
         {
             return;
@@ -35,10 +33,8 @@ public class PlayerIdleState : PlayerGroundedState
 
         player.SetVelocity(0, rb.velocity.y);
 
-        //player cannot move while in the busy condition after attack
         if (xInput != 0 && !player.isBusy)
         {
-            //player cannot move towards the wall while is next to the wall
             if (!(player.IsWallDetected() && xInput == player.facingDirection))
             {
                 stateMachine.ChangeState(player.moveState);

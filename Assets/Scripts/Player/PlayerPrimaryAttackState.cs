@@ -6,8 +6,8 @@ public class PlayerPrimaryAttackState : PlayerState
 {
     public int comboCounter {  get; private set; }
 
-    private float lastTimeAttacked; //record the last attack time in order to cooperate with comboWindow
-    private float comboWindow = 0.4f; //the input window to release the next combo attack
+    private float lastTimeAttacked; // 记录最后攻击时间
+    private float comboWindow = 0.4f; // 记录当前与下一次攻击之间的间隔
 
     public PlayerPrimaryAttackState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) : base(_player, _stateMachine, _animBoolName)
     {
@@ -33,7 +33,6 @@ public class PlayerPrimaryAttackState : PlayerState
 
         float attackDirection = player.facingDirection;
         
-        //reassign value to xInput to prevent bugs that the value of xInput is not updated in time
         xInput = Input.GetAxisRaw("Horizontal");
         if (xInput != 0)
         {
@@ -42,7 +41,7 @@ public class PlayerPrimaryAttackState : PlayerState
 
         player.SetVelocity(player.attackMovement[comboCounter].x * attackDirection, player.attackMovement[comboCounter].y);
 
-        stateTimer = 0.1f; //to keep the inertia a bit when attacking in move state
+        stateTimer = 0.1f; 
     }
 
     public override void Exit()

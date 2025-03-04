@@ -18,7 +18,6 @@ public class ItemObject_Trigger : MonoBehaviour
 
         if (collision.GetComponent<Player>() != null)
         {
-            //Debug.Log($"Picke up {myItemObject.gameObject.name}");
             myItemObject.PickupItem();
         }
     }

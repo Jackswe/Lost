@@ -41,7 +41,6 @@ public class PlayerAnimationTrigger : MonoBehaviour
         {
             if (hit.GetComponent<Enemy>() != null)
             {
-                //set enemy knockback movement to make them get launched into air
                 Enemy _enemy = hit.GetComponent<Enemy>();
                 Vector2 originalKnockbackMovement = _enemy.knockbackMovement;
                 _enemy.knockbackMovement = new Vector2(0, 17);
@@ -50,7 +49,6 @@ public class PlayerAnimationTrigger : MonoBehaviour
                 player.stats.DoDamge(_target);
                 player.fx.ScreenShake(player.fx.shakeDirection_light);
 
-                //set enemy knockback movement to original state
                 _enemy.knockbackMovement = originalKnockbackMovement;
 
                 Inventory.instance.UseSwordEffect_ConsiderCooldown(_target.transform);

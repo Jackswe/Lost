@@ -9,17 +9,16 @@ public class CameraManager : MonoBehaviour
 
     public CinemachineVirtualCamera cm;
 
-    [Header("Camera Lens Info")]
+    [Header("相机距离信息")]
     public float defaultCameraLensSize;
     public float targetCameraLensSize;
     public float cameraLensSizeChangeSpeed;
 
-    [Header("Camera Screen Y Position Info")]
+    [Header("相机垂直位置信息")]
     public float defaultCameraYPosition;
     public float targetCameraYPosition;
     public float cameraYPositionChangeSpeed;
 
-    //[Header("Camera Screen X Position Info")]
     //public float defaultCameraXPosition;
     //public float targetCameraXPositionOffset;
     //public float cameraXPositionChangeSpeed;
@@ -47,13 +46,12 @@ public class CameraManager : MonoBehaviour
         player = PlayerManager.instance.player;
     }
 
+
+    // 如果玩家在可下落平台 则拉远相机距离
     public void CameraMovementOnDownablePlatform()
     {
-        //if player is on downable platform, camera lens size will increase
-        //meanwhile camera y position will decrease
         if (player.isOnPlatform)
         {
-            //m means mirroring the default unity camera
             if (cm.m_Lens.OrthographicSize < targetCameraLensSize)
             {
                 cm.m_Lens.OrthographicSize = Mathf.Lerp(cm.m_Lens.OrthographicSize, targetCameraLensSize, cameraLensSizeChangeSpeed * Time.deltaTime);
@@ -74,10 +72,8 @@ public class CameraManager : MonoBehaviour
                 }
             }
         }
-        //vice versa
         else
         {
-            //can't let this influence camera movement on pit
             if (player.isNearPit)
             {
                 return;

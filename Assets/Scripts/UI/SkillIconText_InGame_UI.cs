@@ -13,12 +13,10 @@ public class SkillIconText_InGame_UI : MonoBehaviour
         {
             GetComponent<TextMeshProUGUI>().text = UniformKeybindNameForInGameUI(keybind.ToString());
 
-            //chinese needs to decrease font size a bit
             if (LanguageManager.instance.localeID == 1)
             {
                 GetComponent<TextMeshProUGUI>().fontSize = 22;
             }
-            //english
             else if (LanguageManager.instance.localeID == 0)
             {
                 GetComponent<TextMeshProUGUI>().fontSize = 26;

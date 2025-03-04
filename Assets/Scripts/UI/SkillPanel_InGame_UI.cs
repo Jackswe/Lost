@@ -31,8 +31,6 @@ public class SkillPanel_InGame_UI : MonoBehaviour
 
     private void Start()
     {
-        //hide all skill icons first to make sure skill panel can show all the unlocked skills correctly
-        //becuase SkillPanel script loads faster than SkillTreeSlot_UI script
         HideAllSkillIcons();
         ShowAllSkillIconsAccordingToUnlockState();
         UpdateAllSkillIconTexts();

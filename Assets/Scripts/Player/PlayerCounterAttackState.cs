@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 角色反击状态
+/// <summary>
+/// 角色成功反击之后将会进入这个状态
+/// </summary>
 public class PlayerCounterAttackState : PlayerState
 {
     private bool canCreateClone;
@@ -17,8 +21,6 @@ public class PlayerCounterAttackState : PlayerState
         stateTimer = player.counterAttackDuration;
         player.anim.SetBool("SuccessfulCounterAttack", false);
 
-        //to ensure every time entering counter attack state
-        //player is able to create clone
         canCreateClone = true;
     }
 
@@ -37,19 +39,17 @@ public class PlayerCounterAttackState : PlayerState
         }
 
         player.SetZeroVelocity();
-
+        // 获取角色攻击范围内的碰撞体
         Collider2D[] colliders = Physics2D.OverlapCircleAll(player.attackCheck.position, player.attackCheckRadius);
 
         foreach (var hit in colliders)
         {
-            //throw back enemy's range attack
             if(hit.GetComponent<Arrow_Controller>() != null)
             {
                 hit.GetComponent<Arrow_Controller>().FlipArrow();
                 SuccessfulCounterAttack();
             }
 
-            //parry enemy's attack
             if (hit.GetComponent<Enemy>() != null)
             {
                 Enemy enemy = hit.GetComponent<Enemy>();
@@ -58,15 +58,12 @@ public class PlayerCounterAttackState : PlayerState
                 {
                     SuccessfulCounterAttack();
 
-                    //parry recover hp/fp
                     player.skill.parry.RecoverHPFPInSuccessfulParry();
 
-                    //if availabe, will spawn clone behind enemy and attack enemy
                     if (canCreateClone)
                     {
-                        //player.skill.clone.CreateCloneWithDelay(new Vector3(enemy.transform.position.x - 1.5f * enemy.facingDirection, enemy.transform.position.y), 0.1f);
                         player.skill.parry.MakeMirageInSuccessfulParry(new Vector3(enemy.transform.position.x - 1.5f * enemy.facingDirection, enemy.transform.position.y));
-                        canCreateClone = false;  //can only create 1 clone every time of counter attack
+                        canCreateClone = false; 
                     }
                 }
             }
@@ -80,8 +77,6 @@ public class PlayerCounterAttackState : PlayerState
 
     private void SuccessfulCounterAttack()
     {
-        //make a random big value here,
-        //cuz this state will be exited by triggerCalled if successfully counter attacked
         stateTimer = 10;
 
         player.anim.SetBool("SuccessfulCounterAttack", true);

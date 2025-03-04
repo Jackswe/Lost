@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [Header("Collision Info")]
+    [Header("Åö×² Info")]
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundCheckDistance = 1;
     [SerializeField] protected Transform wallCheck;
@@ -13,7 +13,7 @@ public class Entity : MonoBehaviour
     public Transform attackCheck;
     public float attackCheckRadius = 1.2f;
 
-    [Header("Knockback Info")]
+    [Header("»÷ÍË Info")]
     public Vector2 knockbackMovement = new Vector2(5, 3);
     public Vector2 randomKnockbackMovementOffsetRange;
     [SerializeField] protected float knockbackDuration = 0.2f;

@@ -18,7 +18,6 @@ public class PlayerCatchSwordState : PlayerState
         player.fx.PlayDustFX();
         player.fx.ScreenShake(player.fx.shakeDirection_medium);
 
-        //flip player according to mouse position
         if (sword.position.x < player.transform.position.x && player.facingDirection == 1)
         {
             player.Flip();
@@ -28,7 +27,6 @@ public class PlayerCatchSwordState : PlayerState
             player.Flip();
         }
 
-        //make player slide back a bit when catching the sword
         stateTimer = 0.1f;
         rb.velocity = new Vector2(player.moveSpeed * -player.facingDirection, rb.velocity.y);
     }
@@ -37,7 +35,6 @@ public class PlayerCatchSwordState : PlayerState
     {
         base.Exit();
 
-        //player can't move immediately after catching the sword
         player.StartCoroutine(player.BusyFor(0.1f));
     }
 
@@ -50,7 +47,6 @@ public class PlayerCatchSwordState : PlayerState
             return;
         }
 
-        //make player slide back a bit when catching the sword
         if (stateTimer < 0)
         {
             player.SetVelocity(0, rb.velocity.y);

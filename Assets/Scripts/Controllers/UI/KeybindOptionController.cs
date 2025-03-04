@@ -12,7 +12,6 @@ public class KeybindOptionController : MonoBehaviour
     [Space]
     [SerializeField] private GameObject keybindConflictPromptWindowPrefab;
 
-    //all these 2 are english
     private string behaveName;
     private string behaveKeybind;
 
@@ -21,7 +20,6 @@ public class KeybindOptionController : MonoBehaviour
         keybindButton.onClick.AddListener(ChangeKeybind);
     }
 
-    //_behaveName is english, cuz KeybindManager.instance.keybindsDictionary only supports english
     public void SetupKeybindOption(string _behaveName, string _behaveKeybind)
     {
         behaveName = _behaveName;
@@ -35,18 +33,15 @@ public class KeybindOptionController : MonoBehaviour
 
     public void TranslateBehaveNameAndUniformBehaveKeybindName()
     {
-        //chinese
         if (LanguageManager.instance.localeID == 1)
         {
             behaveName_InUI.text = LanguageManager.instance.EnglishToChineseKeybindsDictionary[behaveName];
         }
-        //english
         else if (LanguageManager.instance.localeID == 0)
         {
             behaveName_InUI.text = behaveName;
         }
 
-        //UniformKeybindName will auto detect language and translate
         behaveKeybind_InUI.text = UniformKeybindName(behaveKeybind);
     }
 
@@ -102,19 +97,11 @@ public class KeybindOptionController : MonoBehaviour
     {
         StartCoroutine(ChangeKeybindInput());
 
-        //show awaiting input prompt window UI
-        //Debug.Log($"awaiting input for {behaveName.text}");
-        //behaveKeybind.text = "Awaiting input: ";
-
-        //get user keycode input and change the keybind text in UI
-        //StartCoroutine(CheckInput_Coroutine());
-
-        //update the keybind dictionary
+        
     }
 
     private IEnumerator ChangeKeybindInput()
     {
-        //show awaiting input prompt window UI
         if (LanguageManager.instance.localeID == 0)
         {
             behaveKeybind_InUI.text = "Awaiting input";
@@ -131,7 +118,6 @@ public class KeybindOptionController : MonoBehaviour
 
         keybindButton.onClick.RemoveAllListeners();
 
-        //unity has a bug, have to do null check like this here
         if (SkillPanel_InGame_UI.instance != null)
         {
             SkillPanel_InGame_UI.instance?.UpdateAllSkillIconTexts();
@@ -157,23 +143,18 @@ public class KeybindOptionController : MonoBehaviour
                 if (keycode == KeyCode.Escape)
                 {
                     behaveKeybind_InUI.text = UniformKeybindName(KeyBindManager.instance.keybindsDictionary[behaveName].ToString());
-                    Debug.Log("Keybind change cancelled");
                     return true;
                 }
 
                 behaveKeybind_InUI.text = UniformKeybindName(keycode.ToString());
                 behaveKeybind = keycode.ToString();
-                Debug.Log($"{behaveName_InUI.text} keybind has changed to {keycode.ToString()}");
 
                 KeyBindManager.instance.keybindsDictionary[behaveName] = keycode;
 
                 if (HasKeybindConflict(keycode))
                 {
-                    //parent is Keybind_Options
-                    //instantiate keybind conflict prompt window
                     GameObject newKeybindConflictPromptWindow = Instantiate(keybindConflictPromptWindowPrefab, transform.parent.parent.parent.parent);
 
-                    //setup keybind conflict prompt window
                     newKeybindConflictPromptWindow.GetComponent<KeybindConflictPromptWindowController>()?.SetupKeybindConflictPromptWindow(keycode);
                 }
 
@@ -182,7 +163,6 @@ public class KeybindOptionController : MonoBehaviour
 
         }
 
-        //Debug.Log("keybind change failed");
         return false;
     }
 
@@ -201,7 +181,6 @@ public class KeybindOptionController : MonoBehaviour
     {
         foreach (var search in KeyBindManager.instance.keybindsDictionary)
         {
-            //will not conflict with itself
             if (search.Key == behaveName)
             {
                 continue;

@@ -42,7 +42,7 @@ public class PlayerManager : MonoBehaviour, IGameProgressionSaveManager
     {
         if (currency < _price)
         {
-            Debug.Log("Not enough money!");
+            Debug.Log("没有足够的金钱！");
             return false;
         }
 

@@ -26,17 +26,13 @@ public class ParallaxBackground : MonoBehaviour
 
         transform.position = new Vector3(xPosition + distanceToMove, transform.position.y);
 
-        //make endless background image
         if (BGPositionOffset > xPosition + length)
         {
-            //if BGPositionOffset > background_length
-            //(xPosition + length = coordinate(зјБъ) of the right edge of the original BG),
-            //move BG to the new position
+            
             xPosition += length;
         }
         else if (BGPositionOffset < xPosition - length)
         {
-            //same as above but move BG to the left position
             xPosition -= length;
         }
     }

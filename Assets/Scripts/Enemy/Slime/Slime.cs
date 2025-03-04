@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// 史莱姆类型
 public enum SlimeType
 {
     big,
@@ -10,9 +11,10 @@ public enum SlimeType
     small
 }
 
+// 史莱姆敌人行为
 public class Slime : Enemy
 {
-    [Header("Slime specification")]
+    [Header("史莱姆属性")]
     [SerializeField] private SlimeType slimeType;
     [SerializeField] private int amoutOfSlimeToSpawnAfterDeath;
     [SerializeField] private GameObject slimePrefab;
@@ -54,7 +56,6 @@ public class Slime : Enemy
     {
         base.Update();
 
-        //to prevent counter image from always showing when skeleton's attack got interrupted
         if (stateMachine.currentState != attackState)
         {
             CloseCounterAttackWindow();
@@ -78,7 +79,6 @@ public class Slime : Enemy
 
         stateMachine.ChangeState(deathState);
 
-        //small slime will not spawn any more slimes
         if (slimeType == SlimeType.small)
         {
             return;
@@ -94,7 +94,6 @@ public class Slime : Enemy
         //    return;
         //}
 
-        //player's attack will not interrupt big slime's attack
         if (slimeType == SlimeType.big && (stateMachine.currentState == battleState || stateMachine.currentState == attackState))
         {
             return;
@@ -118,9 +117,7 @@ public class Slime : Enemy
 
     public void SetupSpawnedSlime(int _facingDirection)
     {
-        //if the spawned slime's facing direction
-        //is not equal to its parent's facing direction,
-        //flip it
+       
         if (facingDirection != _facingDirection)
         {
             Flip();
@@ -129,7 +126,6 @@ public class Slime : Enemy
         float xVelocity = Random.Range(minSlimeSpawnSpeed.x, maxSlimeSpawnSpeed.x);
         float yVelocity = Random.Range(minSlimeSpawnSpeed.y, maxSlimeSpawnSpeed.y);
 
-        //to prevent the slime spawn speed being interrupted
         isKnockbacked = true;
 
         GetComponent<Rigidbody2D>().velocity = new Vector2(xVelocity * -facingDirection, yVelocity);

@@ -45,8 +45,6 @@ public class Skill_ThunderStrikeController : MonoBehaviour
             transform.rotation = Quaternion.identity;
             transform.localScale = new Vector3(3, 3);
 
-            //thunder will move with enemies to prevent the case
-            //that thunder is too far away from the enemy
             transform.parent = targetStats.transform;
 
             Invoke("DamageAndSelfDestroy", 0.25f);

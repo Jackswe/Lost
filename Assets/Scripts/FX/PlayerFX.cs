@@ -7,14 +7,14 @@ public class PlayerFX : EntityFX
 {
     private bool canScreenShake = true;
 
-    [Header("Screen Shake FX")]
+    [Header("震屏特效 摇晃强度")]
     [SerializeField] private float shakeMultiplier;
     public Vector3 shakeDirection_light;
     public Vector3 shakeDirection_medium;
     public Vector3 shakeDirection_heavy;
     private CinemachineImpulseSource screenShake;
 
-    [Header("Afterimage FX")]
+    [Header("冲刺残影FX")]
     [SerializeField] private GameObject afterimagePrefab;
     [SerializeField] private float afterimageColorLosingSpeed;
     [SerializeField] private float afterimageCooldown;
@@ -47,7 +47,6 @@ public class PlayerFX : EntityFX
 
     public void ScreenShake(Vector3 _shakeDirection)
     {
-        //to prevent gigantic screenshake when hitting multiple enemies at the same time
         if (canScreenShake)
         {
             screenShake.m_DefaultVelocity = new Vector3(_shakeDirection.x * player.facingDirection, _shakeDirection.y) * shakeMultiplier;
@@ -66,7 +65,6 @@ public class PlayerFX : EntityFX
     {
         if (afterimageCooldownTimer < 0)
         {
-            //need to pass transform.rotation here to make afterimage flip together with player when dashing to the left
             GameObject newAfterimage = Instantiate(afterimagePrefab, transform.position, transform.rotation);
             newAfterimage.GetComponent<AfterimageFX>()?.SetupAfterImage(sr.sprite, afterimageColorLosingSpeed);
 

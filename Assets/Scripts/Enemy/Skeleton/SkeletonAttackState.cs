@@ -15,7 +15,6 @@ public class SkeletonAttackState : EnemyState
     {
         base.Enter();
 
-        //set time to make enemy move ahead a bit in the beginning of attack
         stateTimer = 0.1f;
     }
 
@@ -32,15 +31,12 @@ public class SkeletonAttackState : EnemyState
 
         if (stateTimer > 0)
         {
-            //if enemy is knockbacked then its not gonna move ahead any more
             if(enemy.isKnockbacked)
             {
                 stateTimer = 0;
                 return;
             }
 
-            //enemy will move ahead a bit in the beginning of attack
-            //enemy.SetVelocity(enemy.battleMoveSpeed * enemy.facingDirection, rb.velocity.y);
         }
         else
         {

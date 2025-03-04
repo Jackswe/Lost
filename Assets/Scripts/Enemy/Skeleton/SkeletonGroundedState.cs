@@ -29,11 +29,7 @@ public class SkeletonGroundedState : EnemyState
     {
         base.Update();
 
-        //if enemy can see player inside its scan range
-        //or player is behind enemy
-        //but he's too close to the enemy
-        //enemy will hear the player's footsteps
-        //and also enter battleState
+       
         if ((enemy.IsPlayerDetected() || Vector2.Distance(player.position, enemy.transform.position) < enemy.playerHearDistance) && !player.GetComponent<PlayerStats>().isDead)
         {
             stateMachine.ChangeState(enemy.battleState);

@@ -27,7 +27,6 @@ public class LanguageOptionDropdown_UI : MonoBehaviour
         StartCoroutine(SetLocale_Coroutine(optionDropdown.value));
     }
 
-    //0 for English, 1 for Chinese
     private IEnumerator SetLocale_Coroutine(int _localeID)
     {
         yield return LocalizationSettings.InitializationOperation;
@@ -37,14 +36,11 @@ public class LanguageOptionDropdown_UI : MonoBehaviour
 
         KeyBindManager.instance?.UpdateKeybindListLanguage();
 
-        //unity has bug, null check has to be in if-statement type here
-        //otherwise using ?-type will not work
         if (SkillPanel_InGame_UI.instance != null)
         {
             SkillPanel_InGame_UI.instance.UpdateAllSkillIconTexts();
         }
 
-        //yield return new WaitUntil(SetTextFont);
     }
 
     //private bool SetTextFont()

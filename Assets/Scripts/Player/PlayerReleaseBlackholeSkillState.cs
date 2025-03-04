@@ -24,7 +24,6 @@ public class PlayerReleaseBlackholeSkillState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        //Debug.Log("Player has exited blackhole skill state");
         rb.gravityScale = originalGravity;
         player.fx.MakeEntityTransparent(false);
     }

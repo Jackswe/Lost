@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CrystalSkillController : MonoBehaviour
 {
     private Animator anim => GetComponent<Animator>();
@@ -29,8 +30,6 @@ public class CrystalSkillController : MonoBehaviour
     {
         crystalExistenceTimer -= Time.deltaTime;
 
-        //if no avaliable enemy inside the search radius
-        //crystal will not move
         if (targetEnemy == null)
         {
             canMove = false;
@@ -41,13 +40,10 @@ public class CrystalSkillController : MonoBehaviour
             EndCrystal_ExplodeIfAvailable();
         }
 
-        //if crystal can move towards enemy
         if (canMove)
         {
-            //crystal moves towards enemy
             transform.position = Vector2.MoveTowards(transform.position, targetEnemy.transform.position, moveSpeed * Time.deltaTime);
 
-            //crystal destroys itself when approaching enmey
             if (Vector2.Distance(transform.position, targetEnemy.transform.position) < 1)
             {
                 canMove = false;
@@ -111,12 +107,7 @@ public class CrystalSkillController : MonoBehaviour
                 PlayerManager.instance.player.stats.DoMagicDamage(enemy.GetComponent<CharacterStats>(), transform);
 
                 Inventory.instance.UseCharmEffect_ConsiderCooldown(enemy.transform);
-                //ItemData_Equipment equippedCharm = Inventory.instance.GetEquippedEquipmentByType(EquipmentType.Charm);
-
-                //if (equippedCharm != null)
-                //{
-                //    equippedCharm.ExecuteItemEffect(enemy.transform);
-                //}
+                
             }
         }
     }

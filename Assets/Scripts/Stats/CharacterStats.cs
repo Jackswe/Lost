@@ -4,90 +4,85 @@ using UnityEngine;
 
 public enum StatType
 {
-    strength,
-    agility,
-    intelligence,
-    vitality,
-    damage,
-    critChance,
-    critPower,
-    maxHP,
-    armor,
-    evasion,
-    magicResistance,
-    fireDamage,
-    iceDamage,
-    lightningDamage
+    strength,   // 力量
+    agility,// 敏捷
+    intelligence,// 智力
+    vitality,// 耐力
+    damage,// 伤害
+    critChance,// 暴击率
+    critPower,// 暴击伤害
+    maxHP,// 最大生命值
+    armor,// 护甲
+    evasion,// 闪避率
+    magicResistance,// 魔法抗性
+    fireDamage,// 火焰伤害
+    iceDamage,// 冰冻伤害
+    lightningDamage// 雷电伤害
 }
 
 public class CharacterStats : MonoBehaviour
 {
-    [Header("Major Stats")]
-    public Stat strength;  //damage + 1; crit_power + 1%
-    public Stat agility;  //evasion + 1%; crit_chance + 1%
-    public Stat intelligence; //magic_damage + 1; magic_resistance + 3
-    public Stat vitality; //maxHP + 5
+    [Header("主要属性")]
+    public Stat strength;  
+    public Stat agility;  
+    public Stat intelligence; 
+    public Stat vitality;
 
-    [Header("Defensive Stats")]
+    [Header("防御属性：最大血量，护甲（物抗），闪避率 ，法抗")]
     public Stat maxHP;
     public Stat armor;
     public Stat evasion;
     public Stat magicResistance;
 
-    [Header("Offensive Stats")]
+    [Header("攻击属性")]
     public Stat damage;
     public Stat critChance;
-    public Stat critPower;  //critPower = 150% by default
+    public Stat critPower;
 
-    [Header("Magic Stats")]
+    [Header("魔法攻击")]
     public Stat fireDamage;
     public Stat iceDamage;
     public Stat lightningDamage;
 
-    [Header("Ailments Info")]
-    public bool isIgnited; //does damage over time
-    public bool isChilled; //armor - 20%
-    public bool isShocked; //accuracy - 20% (enemy evasion + 20%)
+    [Header("异常状态")]
+    public bool isIgnited; 
+    public bool isChilled; 
+    public bool isShocked; 
     public Stat igniteDuration;
     public Stat chillDuration;
     public Stat shockDuration;
 
+    // 闪电技能
     [SerializeField] private GameObject thunderStrikePrefab;
     private int thunderStrikeDamage;
 
-    //invicible detection is in DoDamage(), there's no invincible detection in TakeDamage()
+    
     public bool isInvincible { get; private set; }
 
     [Space]
     public int currentHP;
-
-    //see ApplyAilment()
+    // 异常状态计时器
     private float ignitedAilmentTimer;
     private float chilledAilmentTimer;
     private float shockedAilmentTimer;
 
     private float ignitedDamageCooldown = 0.3f;
     private float ignitedDamageTimer;
-    private int igniteDamage; //is set up in DoMagicDamage()
+    private int igniteDamage; 
 
-    //vulnerable state will take 10% more damage
     public bool isVulnerable { get; private set; }
     public bool isDead { get; private set; }
 
-    //Stats calculation:
-    //total_evasion = evasion + agility + [attacker shock effect];
-    //total_damage = (damage + strength) * [total_crit_power] - target.armor * [target chill effect];
-    //total_crit_chance = critChance + agility;
-    //total_crit_power = critPower + strength;
-    //total_magic_damage = (fireDamage + iceDamage + lightningDamage + intelligence) - (target.magicResistance + 3 * target.intelligence);
+    // 总体属性计算
+    //total_evasion = evasion + agility + [attacker shock effect];   闪避 + 敏捷 +【敌人的麻痹状态效果】
+    //total_damage = (damage + strength) * [total_crit_power] - target.armor * [target chill effect]; （伤害 + 力量）* [暴击伤害百分比] - 目标护甲 * [对方冰冻状态效果]
+    //total_crit_chance = critChance + agility;  总暴击率 = 暴击率 + 敏捷
+    //total_crit_power = critPower + strength;  总爆伤 = 爆伤 + 力量
+    //total_magic_damage = (fireDamage + iceDamage + lightningDamage + intelligence) - (target.magicResistance + 3 * target.intelligence);  （各属性伤害 + 智力）- （敌人法抗 + 3 * 敌人智力） 
+
 
     public System.Action onHealthChanged;
 
-    //To make entity HP bar correctly updated in start
-    //if not willing to use this bool variable
-    //can change script execution order in unity project settings
-    //order: CharacterStats -> HPBar_UI
-    //[HideInInspector] public bool HPBarCanBeInitialized;
 
     protected EntityFX fx;
 
@@ -138,7 +133,6 @@ public class CharacterStats : MonoBehaviour
 
     public virtual void DoDamge(CharacterStats _targetStats)
     {
-        //if target is invincible, it won't take damage
         if (_targetStats.isInvincible)
         {
             return;
@@ -167,14 +161,12 @@ public class CharacterStats : MonoBehaviour
 
         _targetStats.TakeDamage(_totalDamage, transform, _targetStats.transform, crit);
 
-        //DoMagicDamage(_targetStats, transform);
     }
 
 
 
     public virtual void TakeDamage(int _damage, Transform _attacker, Transform _attackee, bool _isCrit)
     {
-        //if entity is invincible, it won't take damage
         if (isInvincible)
         {
             return;
@@ -182,7 +174,6 @@ public class CharacterStats : MonoBehaviour
 
         DecreaseHPBy(_damage, _isCrit);
 
-        //Debug.Log($"{gameObject.name} received {_damage} damage");
 
         _attackee.GetComponent<Entity>()?.DamageFlashEffect();
         _attackee.GetComponent<Entity>()?.DamageKnockbackEffect(_attacker, _attackee);
@@ -241,7 +232,7 @@ public class CharacterStats : MonoBehaviour
 
         _targetStats.TakeDamage(_totalMagicDamage, _attacker, _targetStats.transform, false);
 
-        //only if at least 1 of the magic damage is > 0, ailment can be applied
+        // 至少有一个法术伤害大于0，才出触发异常
         if (Mathf.Max(_fireDamage, _iceDamage, _lightningDamage) <= 0)
         {
             return;
@@ -252,12 +243,12 @@ public class CharacterStats : MonoBehaviour
 
     private void AttemptToApplyAilments(CharacterStats _targetStats, int _fireDamage, int _iceDamage, int _lightningDamage)
     {
-        //choose the highest magic damage to apply the related ailment
+        // 根据伤害决定异常状态
         bool canApplyIgnite = _fireDamage > _iceDamage && _fireDamage > _lightningDamage;
         bool canApplyChill = _iceDamage > _fireDamage && _iceDamage > _lightningDamage;
         bool canApplyShock = _lightningDamage > _fireDamage && _lightningDamage > _iceDamage;
 
-        //if all the magic damage are the same, randomly pick 1 ailment to apply
+        // 如果全都一样 则随机触发一种
         if (!canApplyIgnite && !canApplyChill && !canApplyShock)
         {
             if (Random.value < 0.3f && _fireDamage > 0)
@@ -294,13 +285,13 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        //set up ignite damage
+        // 控制点燃伤害
         //ignite_damage = fire_damage * 0.2
         if (canApplyIgnite)
         {
             _targetStats.SetupIgniteDamage(Mathf.RoundToInt(_fireDamage * 0.2f));
         }
-
+        // 控制麻痹
         if (canApplyShock)
         {
             _targetStats.SetupThunderStrikeDamage(Mathf.RoundToInt(_lightningDamage * 0.2f));
@@ -342,11 +333,8 @@ public class CharacterStats : MonoBehaviour
             {
                 ApplyShockAilment(_shock);
             }
-            else //when attacking on shocked enemies, thunder strike will be generated and hit enemies
+            else 
             {
-                //prevent cases where enemies' attacks on player
-                //can still generate thunder strike
-                //and hit enemeies themselves
                 if (GetComponent<Player>() != null)
                 {
                     return;
@@ -373,7 +361,7 @@ public class CharacterStats : MonoBehaviour
 
     public void ApplyShockAilment(bool _shock)
     {
-        //can't apply shock ailment on enemy who's already shocked
+        // 已经受到雷击效果则不能叠加
         if (isShocked)
         {
             return;
@@ -388,17 +376,13 @@ public class CharacterStats : MonoBehaviour
 
     private void GenerateThunderStrikeAndHitClosestEnemy(float _targetScanRadius)
     {
-        //find closest target
-        //instantiate thunder strike
-        //setup thunder strike
+        // 找到范围内最近的目标
         Transform closestEnemy = null;
 
-        //find all the enemies inside the search radius
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _targetScanRadius);
 
         float closestDistanceToEnemy = Mathf.Infinity;
 
-        //find closest enemy
         foreach (var hit in colliders)
         {
             if (hit.GetComponent<Enemy>() != null && Vector2.Distance(transform.position, hit.transform.position) > 1)
@@ -413,14 +397,13 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        //if can't find closestEnemy,
-        //the enemy himself is just the closest enemy
+        //如果没有找到
+        //则将技能释放点设为自己
         if (closestEnemy == null)
         {
             closestEnemy = transform;
         }
 
-        //generate thunder strike and hit closest enemy
         if (closestEnemy != null)
         {
             GameObject newThunderStrike = Instantiate(thunderStrikePrefab, transform.position, Quaternion.identity);
@@ -458,10 +441,9 @@ public class CharacterStats : MonoBehaviour
 
 
 
-    #region HP and Damage Calculation - Armor, Crit, Magic Resistance, Vulnerability, Evasion
+    #region 
     protected int CheckTargetArmor(CharacterStats _targetStats, int _totalDamage)
     {
-        //chill effect: reduce armor by 20%
         if (_targetStats.isChilled)
         {
             _totalDamage -= Mathf.RoundToInt(_targetStats.armor.GetValue() * 0.8f);
@@ -472,7 +454,6 @@ public class CharacterStats : MonoBehaviour
         }
 
 
-        //make totalDamge >= 0
         _totalDamage = Mathf.Clamp(_totalDamage, 0, int.MaxValue);
         return _totalDamage;
     }
@@ -496,7 +477,6 @@ public class CharacterStats : MonoBehaviour
 
         if (Random.Range(0, 100) < _totalEvasion)
         {
-            //Debug.Log("Attack Evaded");
             _targetStats.OnEvasion();
             return true;
         }
@@ -593,10 +573,8 @@ public class CharacterStats : MonoBehaviour
     private IEnumerator BecomeVulnerableForTime_Coroutine(float _duration)
     {
         isVulnerable = true;
-        //Debug.Log("Vulnerable!");
         yield return new WaitForSeconds(_duration);
         isVulnerable = false;
-        //Debug.Log("Exit Vulnerable!");
     }
 
     public virtual void IncreaseStatByTime(Stat _statToModify, int _modifier, float _duration)
@@ -641,7 +619,7 @@ public class CharacterStats : MonoBehaviour
     }
 
 
-    #region Get Final Stat Value
+    #region 
     public int getMaxHP()
     {
         return maxHP.GetValue() + vitality.GetValue() * 5;

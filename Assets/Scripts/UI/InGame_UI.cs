@@ -18,7 +18,7 @@ public class InGame_UI : MonoBehaviour
 
     //[SerializeField] private Image flaskImage;
 
-    [Header("Souls Info")]
+    [Header("Souls")]
     [SerializeField] private TextMeshProUGUI currentCurrency;
     [SerializeField] private float currencyAmount;
     [SerializeField] private float increaseRate = 100;
@@ -54,7 +54,6 @@ public class InGame_UI : MonoBehaviour
 
     private void Update()
     {
-        //for number increasing animations when loading or getting currency
         UpdateCurrencyUI();
 
         if (Input.GetKeyDown(/*KeyCode.LeftShift*/ KeyBindManager.instance.keybindsDictionary["Dash"]) && skill.dash.dashUnlocked)
@@ -68,11 +67,7 @@ public class InGame_UI : MonoBehaviour
         }
 
 
-        //crystal cooldown image is set in CrystalSkillController 
-        //if (Input.GetKeyDown(KeyCode.F) && skill.crystal.crystalUnlocked)
-        //{
-        //    SetSkillCooldownImage(crystalImage);
-        //}
+       
 
         if (Input.GetKeyDown(/*KeyCode.Mouse1*/ KeyBindManager.instance.keybindsDictionary["Aim"]) && skill.sword.throwSwordSkillUnlocked)
         {
@@ -84,10 +79,7 @@ public class InGame_UI : MonoBehaviour
             SetSkillCooldownImage(blackholeImage);
         }
 
-        //There's no SetFlaskCooldownImage() function because FillFlaskCooldownImage is in a different logic
-        //and it'll do the same stuff on different kinds of flasks
-        //CDs for different flasks are calculated seperately
-
+       
         FillSkillCooldownImage(dashImage, skill.dash.cooldown);
         FillSkillCooldownImage(parryImage, skill.parry.cooldown);
         FillSkillCooldownImage(crystalImage, skill.crystal.GetCrystalCooldown());
@@ -139,10 +131,8 @@ public class InGame_UI : MonoBehaviour
 
     private void SetSkillCooldownImage(Image _skillImage)
     {
-        //0 means skill is ready to use, default color
         if (_skillImage.fillAmount <= 0)
         {
-            //1 means skill is in cooldown, darker color
             _skillImage.fillAmount = 1;
         }
     }
@@ -161,8 +151,6 @@ public class InGame_UI : MonoBehaviour
 
         if (_skillImage.fillAmount > 0)
         {
-            //the percentage increasement of the cooldown progression as time goes by
-            //1 means in cooldown, 0 means ready to use
             _skillImage.fillAmount -= (1 / _cooldown) * Time.deltaTime;
         }
     }
@@ -176,7 +164,6 @@ public class InGame_UI : MonoBehaviour
             return;
         }
 
-        //each flask should be ready to use in the beginning
         ItemData_Equipment flask = Inventory.instance.GetEquippedEquipmentByType(EquipmentType.Flask);
 
         if (flask == null)

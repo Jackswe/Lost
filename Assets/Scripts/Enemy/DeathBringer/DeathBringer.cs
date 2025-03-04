@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class DeathBringer : Enemy
 {
-    [Header("Teleport Info")]
+    [Header("传送属性")]
     [SerializeField] private BoxCollider2D teleportRegion;
     [SerializeField] private Vector2 surroundingCheckSize;
     public float defaultChanceToTeleport;
     public float chanceToTeleport { get; set; }
 
-    [Header("Spell Cast Info")]
+    [Header("施法属性")]
     [SerializeField] private GameObject spellPrefab;
     [SerializeField] private float spellCastStateCooldown;
     public float lastTimeEnterSpellCastState { get; set; }
     public int castAmount;
     public float castCooldown;
 
-    [Header("Boss Fight Info")]
+    [Header("Boss名字与血条UI")]
     [SerializeField] private GameObject bossNameAndHPUI;
     public int stage { get; set; } = 1;
 
@@ -64,13 +64,12 @@ public class DeathBringer : Enemy
     {
         base.Update();
 
-        //if boss's current HP is below 60%, entering stage 2
-        if (stats.currentHP <= stats.getMaxHP() * 0.6f)
+        // 血条低于50%进入二阶段
+        if (stats.currentHP <= stats.getMaxHP() * 0.5f)
         {
             stage = 2;
         }
 
-        //to prevent counter image from always showing when skeleton's attack got interrupted
         if (stateMachine.currentState != attackState)
         {
             CloseCounterAttackWindow();
@@ -109,7 +108,6 @@ public class DeathBringer : Enemy
 
     public override void GetIntoBattleState()
     {
-        //player cannot interrunt deathbringer's attack or spell
         if (stateMachine.currentState == battleState || stateMachine.currentState == attackState || stateMachine.currentState == castState)
         {
             return;
@@ -154,7 +152,6 @@ public class DeathBringer : Enemy
 
         if (!HasGroundBelow() || HasSomethingSurrounded())
         {
-            Debug.Log("Need to find new teleport position");
             FindTeleportPosition();
         }
     }
@@ -193,13 +190,10 @@ public class DeathBringer : Enemy
     {
         Vector3 spellSpawnPosition;
 
-        //spell will predict player's movement to decide its spawn position
-        //if player is moving, spell will spawn in front of player;
         if (player.rb.velocity.x != 0)
         {
             spellSpawnPosition = new Vector3(player.transform.position.x + player.facingDirection * 3, player.transform.position.y + 1.65f);
         }
-        //if player is not moving, spell will spawn right above player
         else
         {
             spellSpawnPosition = new Vector3(player.transform.position.x, player.transform.position.y + 1.65f);

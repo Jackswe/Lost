@@ -6,32 +6,34 @@ public class Player : Entity
     public SkillManager skill { get; private set; }
     public GameObject sword { get; private set; }
 
-    [Header("Move Info")]
-    public float moveSpeed;
-    public float jumpForce;
-    public float wallJumpXSpeed;
-    public float wallJumpDuration;
-    private float defaultMoveSpeed;
-    private float defaultJumpForce;
+    [Header("移动信息")]
+    public float moveSpeed;  // 移速
+    public float jumpForce;     // 跳跃力
+    public float wallJumpXSpeed;    // 蹬墙跳横向速度
+    public float wallJumpDuration;  // 蹬墙跳持续时间
+    private float defaultMoveSpeed; // 默认移速
+    private float defaultJumpForce; // 默认跳跃力
 
-    [Header("Attack Info")]
+    [Header("攻击信息")]
     public Vector2[] attackMovement;
     public float counterAttackDuration = 0.2f;
 
-    [Header("Dash Info")]
+    [Header("冲刺信息")]
     public float dashSpeed;
     public float dashDuration;
     public float dashDirection { get; private set; }
     private float defaultDashSpeed;
 
-    [Header("Environment Check")]
+    [Header("环境检测")]
     [SerializeField] private BoxCollider2D pitCheck;
     [SerializeField] private BoxCollider2D downablePlatformCheck;
 
+    // 是否在坑附近
     public bool isNearPit { get; set; }
     public DownablePlatform lastPlatform { get; set; }
     public bool isOnPlatform { get; set; } = false;
 
+    // 标志玩家是否正处于繁忙状态（如攻击、冲刺等），用于限制其他输入。
     public bool isBusy { get; private set; }
     public PlayerFX fx { get; private set; }
 
@@ -96,7 +98,6 @@ public class Player : Entity
 
     protected override void Update()
     {
-        //if game is paused player will be freezed
         if (Time.timeScale == 0)
         {
             return;
@@ -139,7 +140,6 @@ public class Player : Entity
 
         if (Input.GetKeyDown(/*KeyCode.LeftShift*/ KeyBindManager.instance.keybindsDictionary["Dash"]) && SkillManager.instance.dash.UseSkillIfAvailable())
         {
-            //if current state is AimSwordState or ThrowSwordState, hide the aim dots first
             if (stateMachine.currentState == aimSwordState || stateMachine.currentState == throwSwordState)
             {
                 skill.sword.ShowDots(false);
@@ -196,8 +196,6 @@ public class Player : Entity
         Destroy(sword);
     }
 
-    //if no sword, return null
-    //if has sowrd, return the sword and return true;
     public bool HasNoSword()
     {
         if (!sword)

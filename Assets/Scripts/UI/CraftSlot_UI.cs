@@ -9,8 +9,6 @@ public class CraftSlot_UI : InventorySlot_UI
         base.Awake();
     }
 
-    //this function is to make the text lanaguge of this equipment's name
-    //to get updated immediately after changing text language in options
     private void OnEnable()
     {
         SetupCraftSlot(equipment);

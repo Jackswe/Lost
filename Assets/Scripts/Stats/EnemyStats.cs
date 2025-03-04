@@ -7,9 +7,10 @@ public class EnemyStats : CharacterStats
 
     public Stat currencyDropAmount;
 
-    [Header("Enemy Level Info")]
+    [Header("敌人等级")]
     [SerializeField] private int enemyLevel = 1;
 
+    [Header("升级属性增长百分比")]
     [Range(0f, 1f)]
     [SerializeField] private float percentageModifier = 0.4f;
 
@@ -31,10 +32,7 @@ public class EnemyStats : CharacterStats
     {
         base.TakeDamage(_damage, _attacker, _attackee, _isCrit);
 
-        //this will interupt skeleton's action even if enemy is attacking player!
-        //because in skeleton.GetintoBattleState() it doesn't check if current state is attack state
-        //the original purpose of this is to make enemy enter battle state immediately
-        //if player is attacking enemy from behind
+        // 这段代码是为了在敌人受到伤害的时候立即打断敌人当前的状态进入战斗状态
         enemy.GetIntoBattleState();
     }
 
@@ -44,10 +42,8 @@ public class EnemyStats : CharacterStats
 
         enemy.Die();
 
-        //enemy will drop items when dying
         itemDropSystem.GenrateDrop();
 
-        //player will get currency when killing enemy
         PlayerManager.instance.currency += currencyDropAmount.GetValue();
 
         Destroy(gameObject, 3f);
@@ -69,7 +65,6 @@ public class EnemyStats : CharacterStats
     {
         itemDropSystem.GenrateDrop();
 
-        //player will get currency when killing enemy
         PlayerManager.instance.currency += currencyDropAmount.GetValue();
     }
 
@@ -98,7 +93,6 @@ public class EnemyStats : CharacterStats
 
     private void ModifyStatAccordingToEnemyLevel(Stat _stat)
     {
-        //when enemyLevel > 1, increase enemy's stats
         for (int i = 1; i < enemyLevel; i++)
         {
             float _modifier = _stat.GetValue() * percentageModifier;

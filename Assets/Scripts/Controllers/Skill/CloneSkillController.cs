@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+// 克隆技能实现
 public class CloneSkillController : MonoBehaviour 
 {
     private SpriteRenderer sr;
@@ -75,7 +76,7 @@ public class CloneSkillController : MonoBehaviour
 
     private void AttackTrigger()
     {
-        //if aggressive mirage is learned, clone attack will also apply on-hit effect
+        // 技能是否解锁
         if (SkillManager.instance.clone.aggressiveCloneCanApplyOnHitEffect)
         {
             Inventory.instance.ReleaseSwordArcane_ConsiderCooldown();
@@ -89,18 +90,14 @@ public class CloneSkillController : MonoBehaviour
             {
                 Enemy enemy = hit.GetComponent<Enemy>();
 
-                //enemy.DamageEffect(transform, enemy.transform);
 
-                //PlayerManager.instance.player.stats.DoDamge(enemy.GetComponent<CharacterStats>());
                 PlayerStats playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
 
-                //clone damage should be less than player damage
                 if(playerStats != null)
                 {
                     playerStats.CloneDoDamage(enemy.GetComponent<CharacterStats>(), cloneAttackDamageMultiplier, transform);
                 }
 
-                //if aggressive mirage is learned, clone attack will also apply on-hit effect
                 if (SkillManager.instance.clone.aggressiveCloneCanApplyOnHitEffect)
                 {
                     Inventory.instance.UseSwordEffect_ConsiderCooldown(enemy.transform); ;
@@ -108,7 +105,6 @@ public class CloneSkillController : MonoBehaviour
 
                 if (canDuplicateClone)
                 {
-                    //randomly create clone on sides of enemy
                     if (Random.Range(0, 100) < duplicatePossibility  && SkillManager.instance.clone.currentDuplicateCloneAmount < SkillManager.instance.clone.maxDuplicateCloneAmount)
                     {
                         SkillManager.instance.clone.CreateDuplicateClone(new Vector3(hit.transform.position.x + 1f * cloneFacingDirection, hit.transform.position.y));
@@ -121,11 +117,8 @@ public class CloneSkillController : MonoBehaviour
 
     private void FaceClosestTarget()
     {
-        //if successfully found out the closest enemy
         if(closestEnemy != null)
         {
-            //if clone is on the right side of the closest enmey, flip it
-            //clone faces right by default
             if(transform.position.x > closestEnemy.position.x)
             {
                 CloneFlip();

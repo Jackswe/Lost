@@ -51,14 +51,11 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        //prevent from re-playing the same sfx,
-        //need this to keep footstep audio playing correctly
         if (sfx[_sfxIndex].isPlaying == true)
         {
             return;
         }
 
-        //if the sfx source is too far from player, player won't hear it
         if (_sfxSourceTransform != null && Vector2.Distance(PlayerManager.instance.player.transform.position, _sfxSourceTransform.position) > sfxMinHearableDistance)
         {
             return;
@@ -96,7 +93,6 @@ public class AudioManager : MonoBehaviour
 
         while (_audio.volume > 0.1f)
         {
-            //decrease volume by 20% every 0.25 second
             _audio.volume -= _audio.volume * 0.2f;
 
             yield return new WaitForSeconds(0.25f);
@@ -114,10 +110,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBGM(int _bgmIndex)
     {
-        //stop all the bgms first
         StopAllBGM();
 
-        //play the specified bgm
         if (_bgmIndex < bgm.Length)
         {
             bgmIndex = _bgmIndex;
@@ -125,7 +119,6 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("BGM Index out of range");
         }
     }
 

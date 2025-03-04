@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BlackholeSkill : Skill
 {
-    [Header("Blackhole Unlock Info")]
+    [Header("黑洞技能解锁信息")]
     [SerializeField] private SkillTreeSlot_UI blackholeUnlockButton;
     public bool blackholeUnlocked {  get; private set; }
 

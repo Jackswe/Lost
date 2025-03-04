@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// UIµ–»À
 public class TextEnemy : Enemy
 {
     public BoxCollider2D textCollider { get; set; }
 
-    [Header("Death Rewards")]
+    [Header("Deat")]
     public int currencyToGive;
     public List<GameObject> objectListToShow;
     public List<GameObject> prefabListToInstantiate;

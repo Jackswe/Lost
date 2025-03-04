@@ -1,7 +1,9 @@
 using UnityEngine;
 
 
-//Remember to use Fill up item data base function in inventorymanager script in unity editor every time making a new item!
+/// <summary>
+/// 处理物品捡起 掉落等
+/// </summary>
 public class ItemObject : MapElement
 {
     [SerializeField] private Rigidbody2D rb;
@@ -21,7 +23,6 @@ public class ItemObject : MapElement
         SetupItemIconAndName();
     }
 
-    //pickup item is called in ItemObject_Trigger
     public void PickupItem()
     {
         if (!Inventory.instance.CanAddEquipmentToInventory() && item.itemType == ItemType.Equipment)
@@ -46,7 +47,6 @@ public class ItemObject : MapElement
 
         GameManager.instance.UsedMapElementIDList.Add(mapElementID);
 
-        Debug.Log($"Picked up item {item.itemName}");
         Destroy(gameObject);
     }
 

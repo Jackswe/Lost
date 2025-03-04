@@ -5,7 +5,6 @@ public class KeybindConflictPromptWindowController : MonoBehaviour
 {
     [SerializeField] private GameObject[] keybindConflicts;
 
-    //will consider at most 2 conflict keybinds
     public void SetupKeybindConflictPromptWindow(KeyCode _keyCode)
     {
         List<string> _behaveNames = new List<string>();
@@ -14,7 +13,6 @@ public class KeybindConflictPromptWindowController : MonoBehaviour
         {
             if (search.Value == _keyCode)
             {
-                //behaveName here is always english
                 _behaveNames.Add(search.Key);
             }
         }
@@ -24,14 +22,12 @@ public class KeybindConflictPromptWindowController : MonoBehaviour
         {
             //KeybindConflictController[] controllers = GetComponentsInChildren<KeybindConflictController>();
 
-            //will consider at most 2 conflict keybinds
             int k = 0;
 
             for (int i = 0; i < keybindConflicts.Length; i++)
             {
                 keybindConflicts[i].GetComponent<KeybindConflictController>()?.SetupKeybindConflict(_behaveNames[k], _keyCode.ToString());
                 k++;
-                //Debug.Log("Keybind conflict unit has been set up");
 
                 if (k == 2)
                 {

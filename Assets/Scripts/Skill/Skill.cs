@@ -82,12 +82,10 @@ public class Skill : MonoBehaviour
     {
         Transform closestEnemy = null;
 
-        //find all the enemies inside the search radius
         Collider2D[] colliders = Physics2D.OverlapCircleAll(_searchCenter.position, 12);
 
         float closestDistanceToEnemy = Mathf.Infinity;
 
-        //find closest enemy
         foreach (var hit in colliders)
         {
             if (hit.GetComponent<Enemy>() != null)
@@ -111,7 +109,6 @@ public class Skill : MonoBehaviour
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _targetSearchRadius);
 
-        //Find enemies inside the searchRadius
         List<Transform> enemies = new List<Transform>();
 
         foreach (var hit in colliders)
@@ -122,8 +119,6 @@ public class Skill : MonoBehaviour
             }
         }
 
-        //if successfully finds enemies around,
-        //randomly select one to be targetEnemy
         if (enemies.Count > 0)
         {
             targetEnemy = enemies[Random.Range(0, enemies.Count)];

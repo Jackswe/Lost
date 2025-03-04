@@ -67,10 +67,8 @@ public class SaveManager : MonoBehaviour
 
     public void LoadGame()
     {
-        //Load Settings
         LoadSettings();
 
-        //Load Game Progression
         LoadGameProgression();
     }
 
@@ -78,11 +76,9 @@ public class SaveManager : MonoBehaviour
     {
         settingsData = settingsDataHandler.LoadSettings();
 
-        //default settings?
         if (settingsData == null)
         {
             settingsData = new SettingsData();
-            Debug.Log("No settings data found, loading default settings");
         }
 
         foreach (var saveManager in settingsSaveManagers)
@@ -93,12 +89,11 @@ public class SaveManager : MonoBehaviour
 
     private void LoadGameProgression()
     {
-        // gameData = date from dataHandler
         gameData = gameDataHandler.LoadGameProgression();
 
         if (gameData == null)
         {
-            Debug.Log("No save data found, entering new game");
+            Debug.Log("没有找到存档，开始新游戏！");
             NewGame();
         }
 
@@ -112,10 +107,8 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame()
     {
-        //Save settings...
         SaveSettings();
 
-        //Save Game Progression
         SaveGameProgression();
     }
 
@@ -138,7 +131,6 @@ public class SaveManager : MonoBehaviour
 
         gameDataHandler.SaveGameProgression(gameData);
 
-        //Debug.Log($"Saved currency: {gameData.currecny}");
     }
 
 
@@ -152,13 +144,12 @@ public class SaveManager : MonoBehaviour
     {
         IEnumerable<IGameProgressionSaveManager> saveManagers = FindObjectsOfType<MonoBehaviour>().OfType<IGameProgressionSaveManager>();
 
-        //new List<ISaveManager>() here is just a constructor
         return new List<IGameProgressionSaveManager>(saveManagers); 
     }
 
 
 
-    [ContextMenu("Delete game progression save file")]
+    [ContextMenu("删除存档")]
     public void DeleteGameProgressionSavedData()
     {
         gameDataHandler = new FileDataHandler(Application.persistentDataPath, gameFileName, encryptData);

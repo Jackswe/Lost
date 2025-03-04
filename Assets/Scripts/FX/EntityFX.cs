@@ -9,27 +9,27 @@ public class EntityFX : MonoBehaviour
     protected Player player;
 
 
-    [Header("Pop Up Text")]
+    [Header("上浮跳字")]
     [SerializeField] private GameObject popUpTextPrefab;
 
-    [Header("Flash FX")]
+    [Header("受伤闪烁特效")]
     [SerializeField] private float flashDuration;
     [SerializeField] private Material hitMaterial;
     private Material originalMaterial;
 
-    [Header("Ailment Colors")]
+    [Header("异常状态颜色")]
     [SerializeField] private Color[] igniteColor;
     [SerializeField] private Color chillColor;
     [SerializeField] private Color[] shockColor;
 
     private bool canApplyAilmentColor;
 
-    [Header("Ailment Particles")]
+    [Header("异常状态 粒子")]
     [SerializeField] private ParticleSystem igniteFX;
     [SerializeField] private ParticleSystem chillFX;
     [SerializeField] private ParticleSystem shockFX;
 
-    [Header("Hit FX")]
+    [Header("击中效果")]
     [SerializeField] private GameObject hitFXPrefab;
     [SerializeField] private GameObject critHitFXPrefab;
 
@@ -74,10 +74,7 @@ public class EntityFX : MonoBehaviour
 
         sr.material = hitMaterial;
 
-        //to fix the bug where enemy's color can still be ailment color when attacking enemy
-        //when its ailment state is almost over,
-        //the flash effect remembers the original color as the ailment state color
-        //so enemy's color will be incorrect
+        
         //Color originalColor = sr.color;
         //sr.color = Color.white;
 
@@ -106,7 +103,6 @@ public class EntityFX : MonoBehaviour
         CancelInvoke();
 
         sr.color = Color.white;
-        Debug.Log("Set to color white");
 
         igniteFX.Stop();
         chillFX.Stop();
@@ -202,14 +198,12 @@ public class EntityFX : MonoBehaviour
         }
     }
 
-    //To make sure entity is first colored by Hit ColorFX then Ailment ColorFX
     #region AilmentColorFX_Coroutine
     public IEnumerator EnableIgniteFXForTime_Coroutine(float _seconds)
     {
         yield return new WaitUntil(() => canApplyAilmentColor == true);
         EnableIgniteFXForTime(_seconds);
 
-        //Debug.Log("Ignite ColorFX called");
     }
 
     public IEnumerator EnableChillFXForTime_Coroutine(float _seconds)
@@ -217,7 +211,6 @@ public class EntityFX : MonoBehaviour
         yield return new WaitUntil(() => canApplyAilmentColor == true);
         EnableChillFXForTime(_seconds);
 
-        //Debug.Log("Chill ColorFX called");
     }
 
     public IEnumerator EnableShockFXForTime_Coroutine(float _seconds)
@@ -225,7 +218,6 @@ public class EntityFX : MonoBehaviour
         yield return new WaitUntil(() => canApplyAilmentColor == true);
         EnableShockFXForTime(_seconds);
 
-        //Debug.Log("Shock ColorFX called");
     }
     #endregion
 
@@ -234,7 +226,6 @@ public class EntityFX : MonoBehaviour
     public void CreateHitFX(Transform _targetTransform, bool _canCrit)
     {
         float zRotation = Random.Range(-90, 90);
-        //randomly give some position offset to hit fx every time
         float xOffset = Random.Range(-0.5f, 0.5f);
         float yOffset = Random.Range(-0.5f, 0.5f);
 
@@ -249,7 +240,6 @@ public class EntityFX : MonoBehaviour
 
             zRotation = Random.Range(-30, 30);
 
-            //yRotation controls the crit hit fx direction according to entity facing direction
             float yRotation = 0;
             if (GetComponent<Entity>().facingDirection == -1)
             {

@@ -41,24 +41,20 @@ public class PlayerDownStrikeState : PlayerState
             return;
         }
 
-        //player will first rise up a bit as the falling strike "charge" stage
         if (!fallingStrikeTrigger)
         {
             player.SetVelocity(0, 1.2f);
         }
         else
         {
-            //player will strike down
             player.SetVelocity(0, -17);
 
-            //when the sword is fully reached out to attack enemy, anim will stop at this stage
             if (animStopTrigger && !animStopTriggerHasBeenSet)
             {
                 player.anim.speed = 0;
                 animStopTriggerHasBeenSet = true;
             }
 
-            //when player reaches ground, anim will continue playing
             if (player.IsGroundDetected())
             {
                 player.anim.speed = 1;
@@ -71,7 +67,6 @@ public class PlayerDownStrikeState : PlayerState
                 }
             }
 
-            //if triggerCalled has been set to true, player's down strike is finished
             if (triggerCalled)
             {
                 stateMachine.ChangeState(player.idleState);

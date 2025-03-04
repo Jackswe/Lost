@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 public class DashSkill : Skill
 {
-    [Header("Dash Unlock Info")]
+    [Header("冲刺技能")]
     public bool dashUnlocked;
     [SerializeField] private SkillTreeSlot_UI dashUnlockButton;
 
-    [Header("Clone on Dash Start unlock Info")]
+    [Header("冲刺幻影 开始")]
     public bool cloneOnDashStartUnlocked;
     [SerializeField] private SkillTreeSlot_UI cloneOnDashStartUnlockButton;
 
-    [Header("Clone on Dash End Unlock Info")]
+    [Header("冲刺幻影 结束")]
     public bool cloneOnDashEndUnlocked;
     [SerializeField] private SkillTreeSlot_UI cloneOnDashEndUnlockButton;
 

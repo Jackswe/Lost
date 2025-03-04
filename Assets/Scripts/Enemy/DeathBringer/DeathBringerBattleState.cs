@@ -17,15 +17,10 @@ public class DeathBringerBattleState : DeathBringerState
     {
         base.Enter();
 
-        //entering battleState will set the default enemy aggressiveTime
-        //To prevent the case where if player approaching enemy from behind
-        //enemy will get stuck in switching between idleState and battleState
         stateTimer = enemy.aggressiveTime;
 
         player = PlayerManager.instance.player.transform;
 
-        //if player is attacking enemy from behin,
-        //enemy will turn to player's side immediately
         FacePlayer();
 
         enemy.ShowBossHPAndName();
@@ -56,13 +51,10 @@ public class DeathBringerBattleState : DeathBringerState
 
         //AudioManager.instance.PlaySFX(14, enemy.transform);
 
-        //enemy always faces player in battle state
-        //to prevent enemy from getting stuck in edge of ground
         FacePlayer();
 
         if (enemy.IsPlayerDetected())
         {
-            //If enemy can see player, then it's always in aggreesive mode
             stateTimer = enemy.aggressiveTime;
 
             if (enemy.IsPlayerDetected().distance < enemy.attackDistance)
@@ -77,10 +69,8 @@ public class DeathBringerBattleState : DeathBringerState
                 }
             }
         }
-        //i think this is not a necessary end-level boss so player can escape from it
-        else  //If enemy can't see player, 
+        else  
         {
-            //the only way to make boss out of anger is to stay outside of boss's sight for certain seconds
             if (stateTimer < 0)
             {
                 stateMachine.ChangeState(enemy.idleState);
@@ -88,9 +78,7 @@ public class DeathBringerBattleState : DeathBringerState
             }
         }
 
-        //this will make enemy move towards player only when player is far from enemy's attack distance
-        //or player is behind enemy
-        //when enemy is close to player it'll be stopped
+        
         if (enemy.IsPlayerDetected() && Vector2.Distance(enemy.transform.position, player.transform.position) < enemy.attackDistance)
         {
             ChangeToIdleAnimation();
@@ -121,11 +109,9 @@ public class DeathBringerBattleState : DeathBringerState
 
     private bool CanAttack()
     {
-        //skeleton can only attack when it's on ground
         if (Time.time - enemy.lastTimeAttacked >= enemy.attackCooldown && !enemy.isKnockbacked && rb.velocity.y <= 0.1f && rb.velocity.y >= -0.1f)
         {
-            //enemy's lastTimeAttacked is set in attackState
-            //enemy's attack frequency will be random
+            
             enemy.attackCooldown = Random.Range(enemy.minAttackCooldown, enemy.maxAttackCooldown);
             return true;
         }

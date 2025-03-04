@@ -8,7 +8,6 @@ public class IceAndFire_Effect : ItemEffect
     [SerializeField] private GameObject iceAndFirePrefab;
     [SerializeField] private float xFlyVelocity;
 
-    //summon ice and fire on third primary attack if successfully hitting enemy
     //public override void ExecuteEffect_HitNeeded(Transform _spawnTransform)
     //{
     //    Player player = PlayerManager.instance.player;
@@ -26,7 +25,6 @@ public class IceAndFire_Effect : ItemEffect
 
     //}
 
-    //summon ice and fire on third primary attack no matter third attack hits enemy or not
     //public override void ExecuteEffect_NoHitNeeded()
     //{
     //    Player player = PlayerManager.instance.player;
@@ -45,7 +43,6 @@ public class IceAndFire_Effect : ItemEffect
     //}
 
 
-    //summon ice and fire on third primary attack no matter third attack hits enemy or not
     public override void ReleaseSwordArcane()
     {
         Player player = PlayerManager.instance.player;

@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// 弓箭手敌人基类
 public class Archer : Enemy
 {
-    [Header("Archer Specification")]
+    [Header("弓箭手")]
     [SerializeField] private GameObject arrowPrefab;
     public Vector2 jumpVelocity;
     public float jumpCooldown;
-    public float jumpJudgeDistance; //how close player should be to archer to make archer decide to jump away
+    public float jumpJudgeDistance; 
     public float lastTimeJumped { get; set; }
     [SerializeField] private float arrowFlySpeed;
 
@@ -52,7 +54,6 @@ public class Archer : Enemy
     {
         base.Update();
 
-        //to prevent counter image from always showing when skeleton's attack got interrupted
         if (stateMachine.currentState != attackState)
         {
             CloseCounterAttackWindow();
@@ -92,7 +93,6 @@ public class Archer : Enemy
     }
 
 
-    //archer's special attack is shooting arrow
     public override void SpecialAttackTrigger()
     {
         //Debug.Log("shoot arrow");

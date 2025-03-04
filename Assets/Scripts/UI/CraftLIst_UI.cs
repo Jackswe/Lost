@@ -12,15 +12,12 @@ public class CraftList_UI : MonoBehaviour, IPointerDownHandler
 
     private void Start()
     {
-        //setup the default craft list (the first craft type - weapon)
         transform.parent.GetChild(0)?.GetComponent<CraftList_UI>()?.SetupCraftList();
-        //setup the default craft window (the first weapon in the weapon craft list)
         transform.parent.GetChild(0)?.GetComponent<CraftList_UI>()?.SetupDefaultCraftWindow();
     }
 
     public void SetupCraftList()
     {
-        //delete all the current craft slot UI
         for (int i = 0; i < referenceCraftList.childCount; i++)
         {
             Destroy(referenceCraftList.GetChild(i).gameObject);

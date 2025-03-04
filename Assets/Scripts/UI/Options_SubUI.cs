@@ -16,13 +16,11 @@ public class Options_SubUI : MonoBehaviour
 
     public void SwitchToOptions(GameObject _optionsMenu)
     {
-        //close all the sub UIs
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
 
-        //open the selected sub UI
         if (_optionsMenu != null)
         {
             _optionsMenu.SetActive(true);

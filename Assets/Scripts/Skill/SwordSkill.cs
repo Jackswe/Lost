@@ -13,7 +13,7 @@ public class SwordSkill : Skill
 {
     public SwordType swordType = SwordType.Regular;
 
-    [Header("Skill Info")]
+    [Header("Skill")]
     [SerializeField] private SkillTreeSlot_UI throwSwordSkillUnlockButton;
     public bool throwSwordSkillUnlocked { get; private set; }
     [SerializeField] private GameObject swordPrefab;
@@ -21,23 +21,23 @@ public class SwordSkill : Skill
     [SerializeField] private float swordReturnSpeed;
     private float swordGravity;
 
-    [Header("Regular Sword Info")]
+    [Header("½£ Info")]
     [SerializeField] private float regularSwordGravity;
 
-    [Header("Bounce Sword Info")]
+    [Header("µ¯Ìø½£Info")]
     [SerializeField] private SkillTreeSlot_UI bounceSwordUnlockButton;
     public bool bounceSwordUnlocked { get; private set; }
     [SerializeField] private int bounceAmount;
     [SerializeField] private float bounceSwordGravity;
     [SerializeField] private float bounceSpeed;
 
-    [Header("Pierce Sword Info")]
+    [Header("´©´Ì½£Info")]
     [SerializeField] private SkillTreeSlot_UI pierceSwordUnlockButton;
     public bool pierceSwordUnlocked { get; private set; }
     [SerializeField] private int pierceAmount;
     [SerializeField] private float pierceSwordGravity;
 
-    [Header("Spin Sword Info")]
+    [Header("»ØÐý½£Info")]
     [SerializeField] private SkillTreeSlot_UI spinSwordUnlockButton;
     public bool spinSwordUnlocked { get; private set; }
     [SerializeField] private float maxTravelDistance;
@@ -47,7 +47,7 @@ public class SwordSkill : Skill
 
 
 
-    [Header("Passive Skill Info")]
+    [Header("Passive")]
     [SerializeField] private SkillTreeSlot_UI timeStopUnlockButton;
     [SerializeField] private float enemyFreezeDuration;
     public bool timeStopUnlocked { get; private set; }
@@ -57,7 +57,7 @@ public class SwordSkill : Skill
 
     private Vector2 finalDirection;
 
-    [Header("Aim Dots")]
+    [Header("µ¯Ìøµã")]
     [SerializeField] private int dotNumber;
     [SerializeField] private float spaceBetweenDots;
     [SerializeField] private GameObject dotPrefab;
@@ -82,17 +82,14 @@ public class SwordSkill : Skill
 
     protected override void Update()
     {
-        //calculate sword throw trajectory
         if (Input.GetKeyDown(/*KeyCode.Mouse0*/ KeyBindManager.instance.keybindsDictionary["Attack"]))
         {
             finalDirection = new Vector2(AimDirection().normalized.x * launchSpeed.x, AimDirection().normalized.y * launchSpeed.y);
         }
 
-        //adjust dots position according to player's aim position
         if (Input.GetKey(/*KeyCode.Mouse1*/ KeyBindManager.instance.keybindsDictionary["Aim"]))
         {
             SetupSwordGravity();
-            //dots position will not get adjusted anymore when pressing mouse left
             if (player.stateMachine.currentState != player.throwSwordState)
             {
                 for (int i = 0; i < dots.Length; i++)

@@ -40,7 +40,6 @@ public class SlimeStunnedState : SlimeState
 
         if (rb.velocity.y < 0.1f && enemy.IsGroundDetected())
         {
-            //StunTrigger only makes it play the animation that the slime becomes a puddle of water on ground 
             enemy.anim.SetTrigger("StunTrigger");
             enemy.fx.Invoke("CancelColorChange", 0);
         }

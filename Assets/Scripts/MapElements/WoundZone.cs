@@ -12,10 +12,8 @@ public class WoundZone : MapElement
         {
             if (collision.GetComponent<Player>() != null)
             {
-                //this damage can't kill player here lmao
                 int damage = 30;
 
-                //if player's hp is below 30 rn, this damage will make player only have 1 hp left
                 if (PlayerManager.instance.player.stats.currentHP < 30)
                 {
                     damage = PlayerManager.instance.player.stats.currentHP - 1;

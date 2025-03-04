@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shady : Enemy
 {
-    [Header("Shady Specification")]
+    [Header("Shady Ù–‘")]
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float explosionMaxSize;
     [SerializeField] private float explosionGrowSpeed;
@@ -44,7 +44,6 @@ public class Shady : Enemy
     {
         base.Update();
 
-        //to prevent counter image from always showing when skeleton's attack got interrupted
         //if (stateMachine.currentState != attackState)
         //{
         //    CloseCounterAttackWindow();
@@ -95,7 +94,6 @@ public class Shady : Enemy
         cd.enabled = false;
         rb.gravityScale = 0;
         
-        //make shady HP returns 0 when explosion damage triggers
         EnemyStats myStats = stats as EnemyStats;
         myStats.ZeroHP();
         myStats.DropCurrencyAndItem();

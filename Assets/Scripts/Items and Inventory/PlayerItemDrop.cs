@@ -3,14 +3,12 @@ using UnityEngine;
 
 public class PlayerItemDrop : ItemDrop
 {
-    [Header("Player's Drop")]
+    [Header("Íæ¼ÒµôÂä")]
     [SerializeField] private float chanceToDropEquiment;
     [SerializeField] private float chanceToDropMaterials;
 
     public override void GenrateDrop()
     {
-        //get list of equipped equipment
-        //for each of them, drop them by their drop chances
 
         Inventory inventory = Inventory.instance;
         List<InventorySlot> currentEquippedEquipment = inventory.GetEquippedEquipmentList();

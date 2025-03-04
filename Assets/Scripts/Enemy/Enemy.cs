@@ -8,31 +8,31 @@ using UnityEngine;
 [RequireComponent(typeof(ItemDrop))]
 public class Enemy : Entity
 {
-    [Header("Move Info")]
+    [Header("巡逻速度")]
     public float patrolMoveSpeed;
     public float patrolStayTime;
 
     private float defaultPatrolMoveSpeed;
 
-    [Header("Recon Info")]
+    [Header("侦查属性")]
     public float playerScanDistance = 10;
     public float playerHearDistance = 3;
     [SerializeField] protected LayerMask whatIsPlayer;
 
-    [Header("Battle/Aggressive Info")]
+    [Header("战斗属性")]
     public float battleMoveSpeed;
     public float aggressiveTime = 7;
 
     private float defaultBattleMoveSpeed;
 
-    [Header("Attack Info")]
+    [Header("攻击属性")]
     public float attackDistance = 2;
     public float attackCooldown = 1.5f;
     public float minAttackCooldown = 1;
     public float maxAttackCooldown = 2;
     [HideInInspector] public float lastTimeAttacked;
 
-    [Header("Stunned Info")]
+    [Header("眩晕属性")]
     public float stunDuration = 1;
     public Vector2 stunMovement = new Vector2(3, 3);
     protected bool canBeStunned;
@@ -70,6 +70,7 @@ public class Enemy : Entity
         stateMachine.currentState.Update();
     }
 
+    // 在编辑器中用黄色线条表示敌人的攻击范围，便于调试。
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
@@ -78,6 +79,7 @@ public class Enemy : Entity
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + attackDistance * facingDirection, transform.position.y));
     }
 
+    // 是否检测到玩家
     public virtual RaycastHit2D IsPlayerDetected()
     {
         return Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, playerScanDistance, whatIsPlayer);
@@ -93,6 +95,7 @@ public class Enemy : Entity
 
     }
 
+    // 冻结敌人
     public virtual void FreezeEnemy(bool _freeze)
     {
         if (_freeze)
